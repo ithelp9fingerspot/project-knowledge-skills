@@ -54,10 +54,9 @@ digraph legacy_gate {
   - Preserve existing unique operational documents, runbooks, and compliance notes.
   - If `no-source` was chosen, reading legacy files for preservation (e.g. checking whether a file has unique operational notes) **requires explicit developer permission first**, stating the preservation-only purpose.
 - **Replace Mode**:
-  - Replacement scope is strictly limited to disclosed target paths defined in the standard (`README.md`, `AGENTS.md`, `CLAUDE.md`, and standard `docs/` paths).
+  - Replacement scope is strictly limited to disclosed standard destination paths (`README.md`, `AGENTS.md`, `CLAUDE.md`, and standard `docs/` paths) plus individually disclosed, specifically authorized nonstandard sources being replaced or relocated into the new structure (e.g. migrating `docs/overview.md` or `docs/deploy-manual.md`).
   - **NEVER perform recursive deletion** (`rm -rf docs/` or directory wipes).
-  - Any unique or out-of-scope document (e.g. `docs/compliance/soc2-audit-notes.md`, custom operational playbooks) must remain untouched unless specific deletion or replacement authorization is granted.
-
+  - Any undisclosed, out-of-scope, or unique document (e.g. `docs/compliance/soc2-audit-notes.md`, custom operational playbooks) must remain untouched unless specific authorization is granted.
 ---
 
 ## Execution Workflow
@@ -80,8 +79,8 @@ digraph legacy_gate {
 Present the planned documentation mapping to the developer before writing files:
 - Files to create (e.g. `AGENTS.md`, `CLAUDE.md`, `docs/project.md`, `docs/architecture.md`, `docs/data-model.md`, `docs/specs/...`).
 - Files to update or merge into (under merge mode).
-- Files to replace (under replace mode, limited strictly to disclosed standard paths).
-- Files preserved untouched (out-of-scope operational, compliance, or legacy files).
+- Files to replace or relocate (under replace mode: disclosed standard destination paths and individually disclosed, specifically authorized nonstandard sources).
+- Files preserved untouched (undisclosed, out-of-scope, or unique operational, compliance, and legacy files).
 
 ### Phase 4: Neutral Conflict Presentation
 If code, tests, legacy documentation (when allowed as source), or requirements disagree:
@@ -117,7 +116,7 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 |---|---|---|
 | "I should read the README first to understand the project before asking questions." | Reading legacy prose before the source-choice decision biases discovery and violates developer intent. | Stop. Check file paths only. Ask both legacy choices before reading prose. |
 | "User chose merge mode, so I must read all old docs to know what to merge." | In `no-source` mode, reading legacy docs without prior consent risks incorporating unapproved business claims. | Ask permission first: explain that the read is strictly for operational preservation, not business logic. |
-| "User said REPLACE docs and clean everything up, so I can wipe `docs/`." | Replacing docs never authorizes blanket directory deletion or deleting unrelated compliance/ops docs. | Propose a narrow file mapping. Leave out-of-scope files untouched unless explicitly authorized. |
+| "User said REPLACE docs and clean everything up, so I can wipe `docs/`." | Replacing docs never authorizes blanket directory deletion or deleting undisclosed/unauthorized compliance or ops docs. | Propose a narrow file mapping of standard paths and authorized nonstandard sources to replace/relocate. Leave undisclosed unique files untouched. |
 | "Code is newer and unit tests pass, so the code behavior is the approved rule." | Green tests prove code consistency, not business authorization. An implemented bug has green tests. | Present the discrepancy neutrally with evidence from both sources. Await developer decision. |
 | "The user asked in another language, so I should write docs in that language." | Project knowledge documentation must be universally portable across agents and tools in English. | Conversational replies follow user language, but generated repository documents are strictly English. |
 | "The feature is implemented, so its spec status is `approved`." | Status `approved` reflects developer specification consent, not implementation completion. | Keep status `draft` until explicit developer sign-off. |
@@ -125,7 +124,7 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 ## Red Flags - STOP and Ask
 - Reading `README.md` or `docs/*.md` prose before legacy choices are answered.
 - Citing excluded legacy documentation as evidence in feature specs.
-- Overwriting or deleting files outside the disclosed standard layout.
+- Overwriting or deleting files outside disclosed standard paths or specifically authorized replacements.
 - Marking a feature spec `approved` without explicit developer confirmation.
 - Silently resolving a contradiction between code and documentation.
 - Generating documentation in a language other than English.
@@ -139,7 +138,7 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 | **Legacy Source** | Allowed | Inspect legacy docs; flag conflicts with code neutrally. |
 | | Excluded (`no-source`) | Do NOT read or cite legacy docs for business rules. Derive only from code/schema. |
 | **Write Mode** | Merge | Preserve existing content; update iteratively; request permission before preservation reads. |
-| | Replace | Narrow replacement of disclosed standard paths only; leave unique/ops docs untouched. |
+| | Replace | Narrow replacement of disclosed standard paths and authorized nonstandard sources; leave undisclosed unique/ops docs untouched. |
 
 ---
 

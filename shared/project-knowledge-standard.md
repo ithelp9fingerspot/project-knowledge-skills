@@ -169,10 +169,9 @@ Before reading legacy prose for business meaning or writing/modifying any files,
   - Unique operational runbooks, compliance records, and notes are retained.
   - If `no-source` was chosen, legacy files may be read **only for preservation purposes** (to avoid losing unique operational content or custom guides). The agent **must ask explicit permission** before reading legacy files for preservation, clearly stating the preservation purpose.
 - **Replace Mode**:
-  - Narrow replacement scope: Replacement applies strictly to disclosed target paths corresponding to the standard documentation layout (`README.md`, `AGENTS.md`, `CLAUDE.md`, standard `docs/` paths).
+  - Narrow replacement scope: Replacement applies strictly to disclosed standard destination paths corresponding to the standard documentation layout (`README.md`, `AGENTS.md`, `CLAUDE.md`, standard `docs/` paths) plus individually disclosed, specifically authorized nonstandard sources being replaced or relocated into the standard structure.
   - Never run blanket deletions (e.g. `rm -rf docs/` or directory wipes).
-  - Unique documents outside the disclosed mapping (e.g. `docs/compliance/`, `docs/ops-manual.md`, audit notes) must be left completely untouched unless specifically authorized by the developer.
-
+  - Undisclosed, out-of-scope, or unique documents (e.g. `docs/compliance/`, `docs/ops-manual.md`, audit notes) must be left completely untouched unless specifically authorized by the developer.
 ---
 
 ## Language and Portability
