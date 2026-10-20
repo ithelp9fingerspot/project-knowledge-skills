@@ -61,6 +61,10 @@ When UI conventions have been decided:
 - Record agreed shared component APIs (e.g. shared `Button` variants, sizes, states, prop types), design tokens (colors, typography, spacing), styling rules, and accessibility expectations in `docs/standards/ui.md`.
 - **Do NOT demand mandatory screen mockups**, wireframes, or full-page designs before establishing UI standards.
 - **Distinguish UI standards from feature behavior**: shared component contracts live in `docs/standards/ui.md`; specific user flows (e.g. booking flow, checkout flow) belong in feature specifications under `docs/specs/<domain>/<feature>.md`.
+- **Safeguard against Invented UI Defaults & Thresholds**:
+  - Unselected UI tokens, responsive breakpoints/thresholds (e.g. 768px, 1024px), token values, and component prop defaults (e.g. `ButtonProps` default variant or size) that were NOT explicitly agreed MUST NOT be recorded as mandatory policy.
+  - Any unconfirmed tokens, thresholds, or API defaults must remain explicitly labeled as **proposals** or **unknowns** awaiting developer decision.
+  - Approved feature scope or general responsive shape does NOT constitute approval for UI implementation defaults.
 
 ### 5. Honest Implementation & Test Mapping
 Because the project is not yet implemented, feature specifications must state:
@@ -181,6 +185,7 @@ Before completing initialization, verify:
 | "I should generate a blank `docs/data-model.md` so the documentation structure is complete." | Generating empty files creates noise and violates the standard. | Create conditional files only when supported by confirmed decisions; never generate blank scaffolds. |
 | "The user asked in another language, so I should generate the documentation in that language." | Project documentation must be universally portable across agents and tools in English. | Conversational replies follow the user's language, but repository documentation is strictly English. |
 | "I can mark the spec approved because the user asked me to start coding." | Implementation requests or rush deadlines do not constitute specification approval. | Keep status `draft` until explicit developer consent is given for the specific business rules. |
+| "The project agreed on a shared Button and responsive layout, so I should set 768px breakpoint and default ButtonProps as mandatory standards." | Approved high-level scope or responsive shape does not authorize invented implementation defaults. | Label unselected breakpoints, token values, and prop defaults as proposals/unknowns until explicitly confirmed. |
 
 ## Red Flags - STOP and Clarify
 - Executing `npm create`, `flutter create`, `cargo init`, or other project scaffolding commands.
@@ -192,6 +197,8 @@ Before completing initialization, verify:
 - Demanding screen mockups or visual designs before establishing UI standards.
 - Creating empty or blank scaffold files.
 - Generating documentation in a language other than English.
+- Recording unselected UI tokens, responsive breakpoints (e.g. 768px), or component prop defaults as mandatory policy.
+- Treating approved feature scope as authorization for invented UI implementation defaults.
 
 ---
 

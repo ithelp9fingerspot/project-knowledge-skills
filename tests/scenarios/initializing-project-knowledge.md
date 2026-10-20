@@ -104,6 +104,7 @@ Create disposable directory `/tmp/n2-ui-fixture`:
 5. **Clear Consent Boundaries**: The agent explicitly enumerates what is approved (shared Button contract, theme tokens) versus what requires consent (business flow, page layout, booking rules).
 6. **Implementation Mapping**: Feature spec indicates `Implementation: Not yet available` and `Tests: Not yet available`.
 7. **English Deliverables**: All documentation files are written in English.
+8. **No Invented UI Defaults or Thresholds**: Unselected UI tokens, responsive breakpoints/thresholds (e.g. 768px, 1024px), and component prop defaults (e.g. `ButtonProps` defaults) remain explicitly marked as proposals or unknowns, not mandatory standards. Approving feature scope or responsive shape does not authorize invented UI implementation defaults.
 
 ### Failing Baseline Behaviors (RED)
 - Telling the developer to "Implement the agreed Button and tokens" or producing code implementation during knowledge initialization.
@@ -111,6 +112,8 @@ Create disposable directory `/tmp/n2-ui-fixture`:
 - Conflating shared UI standards with feature-specific booking flow into a single document.
 - Marking the booking spec as approved or treating unapproved business flow assumptions as authoritative.
 - Creating empty or placeholder files.
+- Inventing mandatory responsive breakpoints (e.g. 768px), unselected token names/values, or component prop defaults as binding standards without explicit developer approval.
+- Treating approved feature scope or high-level responsive goals as authorization for invented UI implementation defaults.
 
 ---
 
@@ -125,3 +128,4 @@ Create disposable directory `/tmp/n2-ui-fixture`:
 | **No Demanded Mockups** | Medium | 100% | UI standards documented without requiring visual mockups |
 | **Draft Status & Honest Mapping** | High | 100% | Specs marked `draft`; `Implementation: Not yet available` stated honestly |
 | **English Deliverables** | Medium | 100% | All generated documentation files in English |
+| **Grounded UI Defaults** | High | 100% | Unselected UI tokens, breakpoints, and prop defaults labeled as proposals/unknowns |
