@@ -75,7 +75,9 @@ Feature specifications live under `docs/specs/<domain>/<feature>.md`. Every feat
 ## Status & Metadata
 - **Domain**: [Domain name]
 - **Status**: draft | approved
+- **Owner**: [Owner name, or Unassigned if unknown]
 - **Last Updated**: YYYY-MM-DD
+- **Last Reviewed**: YYYY-MM-DD (when actually reviewed; do not fabricate)
 - **Related Specs**: [Links to related specs, or None]
 
 ## Purpose & Scope
@@ -89,7 +91,7 @@ Numbered rules with stable identifiers:
 - **BR-[DOMAIN]-[001]**: [Rule statement]
 - **BR-[DOMAIN]-[002]**: [Rule statement]
 *Precision rules*:
-- Ground rules strictly in observable code/schema; do not strengthen terminology beyond evidence (e.g. do not turn `GRACE_DAYS = 7` into "calendar days" or "business days" without explicit backing).
+- Ground rules in permitted evidence plus explicit developer decisions, distinguishing code-inferred draft rules from intended approved behavior. Do not strengthen terminology beyond evidence (e.g. do not turn `GRACE_DAYS = 7` into "calendar days" or "business days" without explicit backing).
 - Distinguish return values from side effects (e.g. an evaluation returning `True` does not mean an entity was cancelled or persistence updated).
 - Do not assert unevidenced architectural guarantees (e.g. thread-safety, distributed atomicity) from identifiers alone.
 ## Data Model & Persistence
@@ -120,7 +122,7 @@ Links to real codebase files:
 *(When authoring for an unimplemented feature, explicitly state: "Not yet available.")*
 
 ## Open Questions
-- Unresolved questions requiring developer decision. Any open question prevents `approved` status.
+- Unresolved questions requiring developer decision. Material open behavioral questions within scope prevent `approved` status; excluded future topics or out-of-scope backlog items do not prevent approval.
 ```
 
 ### Specification Status Invariants

@@ -1,0 +1,218 @@
+# Portable Project Knowledge Skills
+
+Portable, self-contained skills for AI coding agents to establish, navigate, evolve, and audit repository knowledge.
+
+The primary objective is preventing silent divergence from approved business behavior and coding standards. The skills enforce strict confirmation boundaries: discrepancies between approved specifications, observed code behavior, and requested behavior require explicit developer decisions rather than automatic resolution.
+
+All skill instructions and generated documentation are written in English.
+
+---
+
+## The Four Skills and Their Triggers
+
+| Skill Directory | Trigger / Lifecycle Phase | Key Responsibility |
+|---|---|---|
+| `documenting-existing-projects` | **Existing Codebase Onboarding**:<br>When introducing structured knowledge into an existing, already-implemented project. | Discovers code, schemas, and tests; asks independent legacy choices; drafts grounded feature specs and standards; leaves rules in `draft` status until explicitly approved. |
+| `initializing-project-knowledge` | **Greenfield Project Initiation**:<br>When establishing documentation for a new, unimplemented project from agreed requirements before code or schemas exist. | Gathers purpose, scope, stack, and draft feature requirements; avoids premature application scaffolding or fabricated schemas; records open decisions explicitly. |
+| `working-with-project-specs` | **Feature Evolution & Daily Coding**:<br>When implementing, modifying, refactoring, or extending features in a project governed by project knowledge specs. | Locates specs before code changes; halts on conflicts between requested changes and approved specs; enforces spec-first updates after explicit developer approval. |
+| `auditing-project-knowledge` | **Integrity & Alignment Verification**:<br>When assessing repository knowledge health, link integrity, spec-to-code alignment, and standards adherence. | Enforces strict read-only operation (zero byte mutations, zero unrequested audit artifacts); categorizes findings into structural errors, divergence, and semantic conflicts; routes fixes without automatic rewrites. |
+
+---
+
+## Independent Legacy Choices
+
+When generating documentation for an existing project (`documenting-existing-projects`), the agent must ask two independent questions upfront before reading legacy documentation prose for business meaning or writing any files:
+
+1. **Source Choice**: May existing legacy documentation be used as an additional reference source alongside code and database schemas?
+   - If **No**: Legacy documentation cannot be cited as authority for business rules. Code, migrations, and tests serve as the sole evidence base. If files must be read for preservation under merge, explicit developer permission is required.
+   - If **Yes**: Legacy documentation may be used as supplementary evidence, but discrepancies between legacy prose and code must be presented to the developer rather than silently blessed.
+2. **Write-Mode Choice**: Should generated documentation merge with existing documentation or replace it?
+   - If **Merge**: Existing relevant documentation is preserved, duplicates are resolved deliberately, and conflicting content is flagged for developer decision.
+   - If **Replace**: Replacement is strictly scoped to disclosed paths. Non-standard, compliance, or unique documentation is preserved unless explicit developer permission is given to remove or relocate it.
+
+*Note*: If explicit answers have already been provided for the current run, the agent does not ask again.
+
+---
+
+## Example Invocations
+
+### 1. Documenting an Existing Project
+```text
+"Inspect this repository and generate complete project knowledge documentation following
+our project knowledge standard. Do not treat old docs as authority until I specify,
+and ask me how to handle existing documentation before writing files."
+```
+*Expected Agent Behavior*: Scans filenames without reading prose for business rules; asks the two legacy choices in a single batched prompt; explores schemas, migrations, code, and tests; generates draft specifications with rules marked `draft`; halts for developer approval.
+
+### 2. Initializing a Greenfield Project
+```text
+"Initialize project knowledge for a new appointment booking platform. Stack is Go with
+PostgreSQL; product owner is Sarah. We have not finalized the physical database schema or
+payment provider. Prepare the initial knowledge base and draft booking spec."
+```
+*Expected Agent Behavior*: Creates `README.md`, `AGENTS.md`, `CLAUDE.md`, `docs/project.md`, `docs/architecture.md`, and initial draft specs in `docs/specs/`; sets `Implementation: Not yet available` and `Tests: Not yet available`; defers `docs/data-model.md` until storage schema is concrete; does not run framework scaffolding commands (`go mod init`, etc.).
+
+### 3. Working with Project Specifications
+```text
+"Update billing logic to allow customers without active base subscriptions to purchase
+addons directly. Update the code and tests right away."
+```
+*Expected Agent Behavior*: Locates `docs/specs/billing/addon-purchase.md` and checks rule `BR-ADDON-001`; detects that the request conflicts with an approved rule; stops before modifying any files; presents the conflict neutrally with rule and file references; requests explicit developer approval before updating spec and implementing code.
+
+### 4. Auditing Project Knowledge
+```text
+"Audit all project knowledge documentation in this repository. Verify structural links,
+spec-to-code alignment, and standards compliance. Report any issues found."
+```
+*Expected Agent Behavior*: Performs read-only scans; checks link integrity, implementation mappings, and schema parity; writes zero files to the target repository; reports findings grouped by severity and category with clear workflow routing.
+
+---
+
+## Target Repository Documentation Contract
+
+Standard layout produced in target repositories:
+
+```text
+README.md                     # Concise introduction and routing
+AGENTS.md                     # Shared agent instruction entrypoint and map
+CLAUDE.md                     # Thin pointer directing Claude runtimes to AGENTS.md
+docs/
+  README.md                   # Task-oriented documentation navigation
+  project.md                  # Purpose, users, glossary, stack manifests
+  architecture.md             # Module boundaries, dependencies, design rationale
+  data-model.md               # App-wide ERD and entities (when persistent data exists)
+  development.md              # Prerequisites, setup, commands, troubleshooting
+  standards/
+    coding.md                 # Language/framework conventions grounded in linter/code
+    testing.md                # Test layers, fixtures, execution commands
+    ui.md                     # Component contracts, tokens, accessibility (when UI exists)
+  workflows/
+    spec-changes.md           # Lifecycle for proposing, approving, and verifying specs
+  specs/
+    README.md                 # Specification index and lifecycle overview
+    <domain>/
+      <feature>.md            # Grounded feature specs with stable rule IDs (BR-[DOMAIN]-[001])
+```
+
+Optional `docs/decisions/` is created only when a durable technical architectural decision warrants an Architecture Decision Record (ADR). Files are never generated as empty scaffolds.
+
+---
+
+## Architecture and Packaging Design
+
+### Shared Standard as Authoring Authority
+The single authoritative source for documentation rules, feature spec formats, approval boundaries, and evidence hierarchies is:
+```text
+shared/project-knowledge-standard.md
+```
+
+### Self-Contained Standalone Packages
+To ensure that installing a single skill does not fail due to missing sibling directories or authoring files, each skill directory is packaged as a completely independent distribution:
+```text
+documenting-existing-projects/
+  SKILL.md
+  references/project-knowledge-standard.md
+
+initializing-project-knowledge/
+  SKILL.md
+  references/project-knowledge-standard.md
+
+working-with-project-specs/
+  SKILL.md
+  references/project-knowledge-standard.md
+
+auditing-project-knowledge/
+  SKILL.md
+  references/project-knowledge-standard.md
+```
+
+Each `SKILL.md` accesses its bundled standard via the relative link `references/project-knowledge-standard.md`. There are no mandatory sibling links or runtime package dependencies.
+
+### Thin `CLAUDE.md` Routing
+Generated target projects employ a thin `CLAUDE.md` that directs Claude runtimes to `AGENTS.md`:
+```markdown
+# Claude Instructions
+
+Project instructions and AI guidelines are defined in [AGENTS.md](./AGENTS.md).
+Read `AGENTS.md` before planning or executing tasks in this repository.
+```
+This avoids duplicating instructions between files. Standard relative Markdown links ensure portability across tools without vendor-specific import syntax.
+
+---
+
+## Installation and Host-Loading Limitations
+
+These skills are plain Markdown packages containing instructions and reference files. They do not require custom package managers, MCP servers, slash commands, or Claude-specific hooks.
+
+### Installation
+Copy the desired skill directory directly into the host runtime's designated skill or prompt library:
+- **Agent Skill Directory**: Copy `<skill-name>/` into your agent workspace or global skill directory (e.g. `~/.config/agent/skills/<skill-name>/` or `.agents/skills/<skill-name>/`).
+- **Project-Specific Installation**: Copy the required skill directory into the root or `.skills/` folder of your repository.
+
+### Runtime Limitations & Evidence Scope
+- **Host Runtime Variance**: Actual skill discovery and prompt injection depend entirely on the host environment. The repository guarantees portable Markdown contracts and bundled reference links; it does not claim universal automatic skill discovery across all third-party agents.
+- **Observed Verification**: Verification evidence in this repository was obtained through explicit tool executions and simulated developer turns using host `sdd-implementer` coding agents on Linux x64. Evidence does not claim untested host environments or unverified automatic invocation.
+- **No Global Mutation**: Installing or running these skills does not modify global system configurations, alter remote repositories, or make unrequested changes to target application codebases.
+
+---
+
+## Maintenance and Testing Commands
+
+All scripts and tests use the Python 3 standard library with zero external package dependencies.
+
+### 1. Synchronizing Packaged References
+To propagate edits from `shared/project-knowledge-standard.md` to all four skill packages:
+```bash
+python3 scripts/sync-references.py
+```
+
+### 2. Checking Reference Parity
+To verify that all packaged references match the canonical standard without modifying files (exits `0` on parity, `1` on drift):
+```bash
+python3 scripts/sync-references.py --check
+```
+
+### 3. Running Unit Tests
+To execute the packaging and synchronization test suite:
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+---
+
+## Behavioral Scenario Execution
+
+Behavioral scenarios and evaluation rubrics live in `tests/scenarios/`:
+- `tests/scenarios/documenting-existing-projects.md`: Scenarios E1–E4 (legacy choices, no-source merge, narrow replace, non-English docs).
+- `tests/scenarios/initializing-project-knowledge.md`: Scenarios N1–N2 (empty project decisions, UI initialization).
+- `tests/scenarios/working-with-project-specs.md`: Scenarios W1–W3 (spec/code divergence, scope expansion stop, draft spec creation).
+- `tests/scenarios/auditing-project-knowledge.md`: Scenarios A1–A3 (read-only invariant, semantic conflicts, unimplemented approved specs).
+- `tests/scenarios/standalone-installation.md`: Scenarios P1–P2 (standalone skill portability, thin CLAUDE routing and conflict stop).
+
+### Execution Protocol
+1. **Disposable Fixtures**: Scenarios must always run against throwaway directories in temporary storage (e.g. `/tmp/test-fixture-...`), never against production or real application projects.
+2. **Fresh Agent Sessions**: Run baseline (unassisted) and verification (skill-assisted) sessions in clean contexts to observe comparative behavior.
+3. **Observation & Logging**: Record verbatim tool calls and conversation turns. Inspect generated files for structure, grounded precision, and absence of fabricated decisions.
+4. **Source of Truth**: Observed agent behavior and fixture diff inspections constitute the sole evidence of compliance. Markdown rules alone do not prove behavioral safety.
+
+---
+
+## Research Basis and Stated Limits
+
+The principles guiding this repository's design draw upon established engineering practices for AI coding agents and team knowledge systems:
+
+1. **Google Software Engineering at Google (Chapter 10: Documentation)**:
+   - Emphasizes team-approved design templates, clear documentation ownership, peer review boundaries, and freshness maintenance.
+   - Reference: https://abseil.io/resources/swe-book/html/ch10.html
+2. **OpenAI Harness Engineering**:
+   - Describes concise `AGENTS.md` entrypoints as maps rather than exhaustive manuals, organizing structured repository knowledge for autonomous coding agents.
+   - Reference: https://openai.com/index/harness-engineering/
+3. **Anthropic Claude Code Best Practices**:
+   - Recommends concise shared instructions, modular context loaded on demand, and avoiding instruction duplication across prompt files.
+   - Reference: https://code.claude.com/docs/en/best-practices
+4. **Spotify Engineering (Code with Claude)**:
+   - Highlights shared context architectures enabling human developers and AI agents to operate against the same catalog and standards.
+   - Reference: https://engineering.atspotify.com/2026/6/code-with-claude-coding-is-no-longer-the-constraint
+
+### Limits of Research Application
+These references provide foundational principles for concise instruction routing, structured context, and human approval boundaries. However, they do not prescribe the exact file naming conventions, four-skill decomposition, per-feature ERD requirement, or standalone packaging structure implemented here. Those choices represent specific design adaptations tailored to predictable, bounded agent operation.
