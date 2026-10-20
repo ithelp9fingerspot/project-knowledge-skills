@@ -6,10 +6,10 @@ from pathlib import Path
 import sys
 
 SKILL_DIRECTORIES = (
-    "auditing-project-knowledge",
-    "documenting-existing-projects",
-    "initializing-project-knowledge",
-    "working-with-project-specs",
+    "skills/auditing-project-knowledge",
+    "skills/documenting-existing-projects",
+    "skills/initializing-project-knowledge",
+    "skills/working-with-project-specs",
 )
 
 CANONICAL_RELPATH = Path("shared") / "project-knowledge-standard.md"

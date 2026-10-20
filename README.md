@@ -109,24 +109,24 @@ shared/project-knowledge-standard.md
 ### Self-Contained Standalone Packages
 To ensure that installing a single skill does not fail due to missing sibling directories or authoring files, each skill directory is packaged as a completely independent distribution:
 ```text
-documenting-existing-projects/
-  SKILL.md
-  references/project-knowledge-standard.md
-
-initializing-project-knowledge/
-  SKILL.md
-  references/project-knowledge-standard.md
-
-working-with-project-specs/
-  SKILL.md
-  references/project-knowledge-standard.md
-
-auditing-project-knowledge/
-  SKILL.md
-  references/project-knowledge-standard.md
+skills/
+  documenting-existing-projects/
+    SKILL.md
+    references/project-knowledge-standard.md
+  initializing-project-knowledge/
+    SKILL.md
+    references/project-knowledge-standard.md
+  working-with-project-specs/
+    SKILL.md
+    references/project-knowledge-standard.md
+  auditing-project-knowledge/
+    SKILL.md
+    references/project-knowledge-standard.md
 ```
 
 Each `SKILL.md` accesses its bundled standard via the relative link `references/project-knowledge-standard.md`. There are no mandatory sibling links or runtime package dependencies.
+
+Only `skills/` contains installable packages. Root-level `shared/`, `scripts/`, `tests/`, and `docs/` hold the authoring standard, maintenance tooling, verification scenarios, and design history respectively. Keep each skill's folder name equal to its frontmatter `name`.
 
 ### Thin `CLAUDE.md` Routing
 Generated target projects employ a thin `CLAUDE.md` that directs Claude runtimes to `AGENTS.md`:
@@ -144,15 +144,47 @@ This avoids duplicating instructions between files. Standard relative Markdown l
 
 These skills are plain Markdown packages containing instructions and reference files. They do not require custom package managers, MCP servers, slash commands, or Claude-specific hooks.
 
-### Installation
-Copy the desired skill directory directly into the host runtime's designated skill or prompt library:
-- **Agent Skill Directory**: Copy `<skill-name>/` into your agent workspace or global skill directory (e.g. `~/.config/agent/skills/<skill-name>/` or `.agents/skills/<skill-name>/`).
-- **Project-Specific Installation**: Copy the required skill directory into the root or `.skills/` folder of your repository.
+### Install with the skills CLI
+
+The [skills CLI](https://github.com/vercel-labs/skills) discovers the four packages under `skills/`. Run it through `npx` with Node.js and npm available; no npm package, plugin manifest, or registry publishing step is needed for this repository.
+
+After hosting this repository on GitHub, replace `<owner>/<repo>` below with its actual repository identifier:
+
+```bash
+# List available skills without installing
+npx skills add <owner>/<repo> --list
+
+# Install one skill into the current project (choose the target agent interactively)
+npx skills add <owner>/<repo> --skill documenting-existing-projects
+
+# Install all four skills into the current project, targeting Claude Code
+npx skills add <owner>/<repo> --skill '*' --agent claude-code
+```
+
+Do not use `--all` merely to select all skills: it also selects all agents and skips confirmation. Add `--global` only when installation into the user's skill directories is intended.
+
+For local discovery before publishing, run from this repository's root:
+
+```bash
+npx skills add . --list
+```
+
+The list operation does not install skills. `npx` may download the CLI into npm's cache. The following disables installation telemetry for local verification:
+
+```bash
+DISABLE_TELEMETRY=1 npx skills add . --list
+```
+
+For manual installation, copy the entire `skills/<skill-name>/` directory, including `references/`, into the target host's documented skill directory. Host-specific locations vary; arbitrary repository folders are not guaranteed to be discovered.
+
+### Availability on skills.sh
+
+GitHub hosting makes the repository usable as a CLI source. [skills.sh's FAQ](https://skills.sh/docs/faq) states that leaderboard entries are recorded automatically through installation telemetry; a local discovery check does not publish a listing or prove leaderboard inclusion.
 
 ### Runtime Limitations & Evidence Scope
 - **Host Runtime Variance**: Actual skill discovery and prompt injection depend entirely on the host environment. The repository guarantees portable Markdown contracts and bundled reference links; it does not claim universal automatic skill discovery across all third-party agents.
 - **Observed Verification**: Verification evidence in this repository was obtained through explicit tool executions and simulated developer turns using host `sdd-implementer` coding agents on Linux x64. Evidence does not claim untested host environments or unverified automatic invocation.
-- **No Global Mutation**: Installing or running these skills does not modify global system configurations, alter remote repositories, or make unrequested changes to target application codebases.
+- **Installation Scope**: The CLI writes skill files and host-specific links in the selected project or user skill directories. These instructions default to project scope; no global installation, host configuration changes, or remote publication are part of repository verification.
 
 ---
 

@@ -33,7 +33,7 @@ operates completely independently when copied to an isolated directory without s
 
 ### Target Fixture Setup
 1. **Isolated Skill Deployment**:
-   Copy each skill independently to `/tmp/knowledge-standalone/<skill-name>/`:
+   Copy each package from this repository's `skills/<skill-name>/` independently to `/tmp/knowledge-standalone/<skill-name>/`:
    - `/tmp/knowledge-standalone/documenting-existing-projects/SKILL.md`
    - `/tmp/knowledge-standalone/documenting-existing-projects/references/project-knowledge-standard.md`
    (Repeat for `initializing-project-knowledge`, `working-with-project-specs`, and `auditing-project-knowledge`).
