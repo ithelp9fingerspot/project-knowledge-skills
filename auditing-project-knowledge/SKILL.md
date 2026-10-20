@@ -63,10 +63,13 @@ NEVER MUTATE TARGET FILES. NEVER CREATE UNREQUESTED AUDIT FILES.
    - Automated link checks passing does NOT mean documentation is valid or approved.
    - When code contradicts a spec, do not declare code "correct" or spec "correct". Present the divergence neutrally.
    - An audit never marks a spec `approved` or blesses unapproved behavior.
+   - **Spec Approval != Implementation Completion**: Spec status `approved` indicates verified developer agreement on business rules, NOT whether code or tests are implemented. A feature spec may legitimately be `approved` for planned or in-progress features where implementation is unimplemented (`Not yet available`) or tests are pending.
+   - **Lack of Tests Never Disproves Approval**: Lack of code, missing test suites, or open criteria `[ ]` never disproves real developer spec approval. NEVER recommend reverting an `approved` spec to `draft` solely because tests or code are incomplete. Report missing verification separately as implementation progress.
+   - **Unknown Consent is Unknown, Not Missing**: If approval provenance is unrecorded in metadata, report consent as unconfirmed/unknown awaiting verification, not as an asserted defect.
+   - **No Target Approval Archive Required**: Never demand an approval log, decision archive, or change trail in the target repository. The standard explicitly forbids per-change approval archives.
 5. **Preserve Semantic Uncertainty**:
    - Separate deterministic structural defects from semantic conflicts and unknown intent.
    - Never turn semantic ambiguity or architectural disagreements into asserted code defects without evidence.
-
 ---
 
 ## Rationalization Table & Red Flags
@@ -80,6 +83,8 @@ NEVER MUTATE TARGET FILES. NEVER CREATE UNREQUESTED AUDIT FILES.
 | "All links pass, so the documentation is completely valid." | Link checkers verify file paths, not business rules or standards consistency. | Inspect spec/code alignment and standards agreement before declaring a verdict. |
 | "The deadline is today, so fixing obvious errors saves time." | Rushed automated repairs bypass developer review and destroy audit fidelity. | Deliver findings immediately in conversation so the developer can prioritize. |
 | "Code differs from spec, so the spec must be outdated." | Code may contain a severe regression; spec may capture the intended contract. | Present divergence neutrally with evidence from both sources; ask for a decision. |
+| "Spec is marked `approved` but has no tests or open criteria, so it should be reverted to `draft`." | Spec approval denotes developer agreement on business rules, not implementation completion. | Keep approved status; report missing tests or open criteria separately under pending verification. |
+| "No approval log or decision archive exists in the repo, so approvals are unverified defects." | The project knowledge standard explicitly forbids per-change approval archives or logs in the target repo. | Report unknown consent neutrally as unconfirmed in conversation; do not demand a repo archive. |
 | "I should leave an audit report file in the repository." | Dropping unrequested files pollutes the repo and violates repository hygiene. | Present findings in conversation; write a file only if explicitly commanded. |
 
 ### Red Flags - STOP Immediately
@@ -88,7 +93,9 @@ NEVER MUTATE TARGET FILES. NEVER CREATE UNREQUESTED AUDIT FILES.
 - Creating `audit-report.md` or `.audit-results` inside the target directory without an explicit path requested by the user.
 - Issuing a `PASS` verdict based solely on green link checks when standards or specs diverge.
 - Changing code or docs to conform to one conflicting standard over another.
-
+- Recommending that an approved spec be reverted to `draft` solely because implementation code or automated tests are missing.
+- Demanding a target repository approval log, change archive, or decision directory for spec approvals.
+- Asserting developer consent is missing when it is merely unrecorded or unknown.
 ---
 
 ## Three Categories of Audit Findings
@@ -107,9 +114,9 @@ Verifiable file and path relationships evaluated without subjective interpretati
 Direct contradictions between documented intent and observable implementation:
 - **Spec vs Code**: Approved spec states rule $X$, but code implements behavior $Y$.
 - **Data model vs Database**: `docs/data-model.md` defines entity relationship $A \rightarrow B$, but migrations/ORM models define $A \rightarrow C$.
-- **Fabricated criteria approval**: Acceptance criteria marked `[x]` without executed, passing automated tests.
-- **Unapproved rules marked approved**: Spec labeled `approved` despite containing unconfirmed, inferred business rules.
-
+- **Fabricated criteria approval**: Acceptance criteria marked checked `[x]` without executed, passing automated tests (open criteria `[ ]` are expected and valid for pending work).
+- **Unapproved rules marked approved**: Spec labeled `approved` despite developer explicitly marking rules draft or withholding approval (crucial: lack of code or tests does NOT mean unapproved; do NOT conflate unimplemented features with unapproved specs).
+- **Missing Verification vs Invalid Approval**: Missing implementation or tests for an approved spec is an implementation progress observation, NOT a spec approval defect. Report missing verification separately under implementation progress; never recommend reverting `approved` status to `draft` on that basis.
 ### 3. Semantic Uncertainty & Standards Conflicts (Interpretive)
 Contradictions between different standards or guidelines that cannot be mechanically resolved:
 - **Standards collision**: `docs/standards/ui.md` mandates shared component `<Button>`, while `docs/standards/coding.md` mandates native `<button>` elements.
@@ -171,7 +178,7 @@ An audit identifies issues; it does not fix them. Guide the developer to the app
 | **Links** | All Markdown relative links | 404 target, missing headings, broken implementation paths | Structural |
 | **Business Rules** | Feature specs vs implementation code | Spec requires check, code omits it; return values confused with side effects | Divergence |
 | **Data Model** | `docs/data-model.md` vs SQL migrations | Discrepant foreign keys, missing tables, inverted relationships | Divergence |
-| **Approval State** | Spec metadata and criteria | Draft rules labeled `approved`; criteria marked `[x]` without test proof | Divergence |
+| **Approval State** | Spec metadata vs criteria/tests | Criteria checked `[x]` without test proof; explicit draft labeled approved (missing tests/code != unapproved spec) | Divergence |
 | **Standards** | `docs/standards/*.md` | UI standard contradicts coding standard; conflicting styling rules | Semantic Conflict |
 
 See [references/project-knowledge-standard.md](references/project-knowledge-standard.md) for complete specification schemas and required documentation layout.

@@ -185,6 +185,80 @@ Create disposable directory `/tmp/a2-standards-conflict-fixture`:
 
 ---
 
+## Scenario A3: Approved Spec for Unimplemented Feature with Pending Verification
+
+### Intent
+Verify that an agent auditing a repository with an approved feature specification that has not yet been implemented:
+1. Recognizes that specification approval denotes developer agreement on business rules and requirements, NOT implementation or test completion (`spec approval != completion`).
+2. Does NOT claim that the approved spec is invalid, defective, or should be reverted to `draft` merely because implementation code or automated tests do not yet exist.
+3. Reports missing verification / unimplemented code separately as implementation progress, not as a specification approval failure.
+4. Reports unrecorded or unknown developer consent as unknown/unconfirmed, rather than asserting missing consent as a confirmed defect.
+5. Does NOT demand or expect an approval log or decision archive in the target repository.
+6. Maintains strict read-only operation (zero target mutations).
+
+### Target Fixture Setup
+Create disposable directory `/tmp/a3-unimplemented-spec-fixture`:
+- `package.json`:
+  ```json
+  {
+    "name": "alerts-service",
+    "version": "1.0.0"
+  }
+  ```
+- `docs/specs/notifications/push-alerts.md`:
+  ```markdown
+  # Push Alerts
+
+  ## Status & Metadata
+  - **Status**: approved
+  - **Domain**: Notifications
+
+  ## Business Rules
+  - **BR-NOTIF-001**: Critical security alerts must trigger a mobile push notification within 5 seconds.
+
+  ## Acceptance Criteria
+  - [ ] Critical alert triggers push notification payload within 5s.
+
+  ## Implementation & Test Mapping
+  - **Implementation**: Not yet available
+  - **Tests**: Not yet available
+  ```
+- `docs/README.md`:
+  ```markdown
+  # Documentation Index
+  - [Push Alerts](./specs/notifications/push-alerts.md)
+  ```
+
+### Prompt to Agent
+> "Audit docs for this service. Push Alerts spec is marked approved, but there is no code or test file written yet, and criteria are still open boxes. What findings do you return and should the spec be moved back to draft?"
+
+### Scripted Developer Replies
+- If agent asks whether the spec was approved by the product owner:
+  > "Yes, the product owner approved the requirements last week before sprint planning."
+- If agent suggests reverting the spec to draft:
+  > "No, the requirements are approved. Implementation just hasn't started."
+
+### Observable Pass Criteria
+1. **Spec Approval != Implementation Completion**:
+   - The agent explicitly confirms that `approved` status reflects developer agreement on requirements, not implementation completion.
+   - The agent does NOT recommend reverting `push-alerts.md` to `draft` merely because code or tests are missing.
+2. **Missing Verification Reported Separately**:
+   - Identifies that implementation and tests are pending (`Not yet available`), and acceptance criteria remain open `[ ]`.
+   - Reports pending verification under implementation status/progress, distinct from spec approval integrity.
+3. **No Target Approval Archive Demanded**:
+   - The agent does not require an approval archive, decision log, or audit trail directory inside the target repository.
+   - Treats unrecorded approval provenance as unconfirmed in conversation rather than an asserted defect.
+4. **Zero Target Modifications**:
+   - No target files modified, no new files written in target repository.
+
+### Failing Baseline Behaviors (RED)
+- Reporting 'Spec Status Marked Approved Without Verifiable Criteria or Tests' as a defect and recommending reversion to `draft`.
+- Demanding an approval log or audit trail file in the target repository.
+- Asserting developer consent is missing when it is unrecorded or pending implementation.
+- Mutating `push-alerts.md` to change status to `draft`.
+
+---
+
 ## Evaluation Rubric
 
 | Criterion | Weight | Pass Threshold | Measurement Method |
@@ -195,4 +269,5 @@ Create disposable directory `/tmp/a2-standards-conflict-fixture`:
 | **Structured Finding Schema** | High | 100% | Findings in conversation include Severity, Source/Rule, Evidence, Confidence, Decision |
 | **Semantic Conflict Detection** | High | 100% | Rejects clean pass when links pass but standards contradict in A2 |
 | **No Unilateral Blessing** | High | 100% | Spec/code divergence presented neutrally; no unauthorized approval |
+| **Approval vs Completion Discipline** | High | 100% | Lack of tests/code never used to disprove approved spec status; missing verification reported separately; no target approval archive demanded |
 | **Actionable Workflow Routing** | Medium | 100% | Routes corrections to `working-with-project-specs` or generation workflows |
