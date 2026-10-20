@@ -184,7 +184,7 @@ python3 -m unittest discover -s tests -v
 
 Behavioral scenarios and evaluation rubrics live in `tests/scenarios/`:
 - `tests/scenarios/documenting-existing-projects.md`: Scenarios E1–E4 (legacy choices, no-source merge, narrow replace, non-English docs).
-- `tests/scenarios/initializing-project-knowledge.md`: Scenarios N1–N2 (empty project decisions, UI initialization).
+- `tests/scenarios/initializing-project-knowledge.md`: Scenarios N1–N3 (empty project decisions, UI initialization, in-scope vs future roadmap scope).
 - `tests/scenarios/working-with-project-specs.md`: Scenarios W1–W3 (spec/code divergence, scope expansion stop, draft spec creation).
 - `tests/scenarios/auditing-project-knowledge.md`: Scenarios A1–A3 (read-only invariant, semantic conflicts, unimplemented approved specs).
 - `tests/scenarios/standalone-installation.md`: Scenarios P1–P2 (standalone skill portability, thin CLAUDE routing and conflict stop).

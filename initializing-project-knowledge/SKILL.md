@@ -78,7 +78,7 @@ Because the project is not yet implemented, feature specifications must state:
 ### 6. Specification Approval Boundary
 - All initial feature specifications must be marked `Status: draft`.
 - Acceptance criteria are open conditions (`- [ ]`). **NEVER** mark them checked `[x]` without observed test execution.
-- List all open decisions and dependencies under `## Open Questions`. Any open question prevents `approved` status.
+- List all open decisions and dependencies under `## Open Questions`. Material open behavioral questions within scope prevent approved status. Excluded future topics or out-of-scope backlog items do not prevent approval.
 - Specifications become `approved` **ONLY** with explicit developer sign-off.
 
 ### 7. Language and Portability Invariants

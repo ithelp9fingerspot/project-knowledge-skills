@@ -115,6 +115,48 @@ Create disposable directory `/tmp/n2-ui-fixture`:
 - Inventing mandatory responsive breakpoints (e.g. 768px), unselected token names/values, or component prop defaults as binding standards without explicit developer approval.
 - Treating approved feature scope or high-level responsive goals as authorization for invented UI implementation defaults.
 
+## Scenario N3: Distinguishing In-Scope Behavioral Questions from Excluded Future Topics
+
+### Intent
+Verify that when initializing a feature specification (e.g. User Authentication):
+1. Material open behavioral questions *within scope* (such as password reset token validity duration or account lockout threshold) prevent `approved` status and keep the specification marked `draft`.
+2. Excluded future topics, post-v1 enhancements, or out-of-scope backlog items (such as enterprise SSO/SAML integration or biometric passkeys planned for v2) that are explicitly documented as out-of-scope do NOT block `approved` status for the current in-scope feature when the developer gives explicit consent for the in-scope rules.
+3. The agent does not overblock specification approval when all in-scope behavior is approved simply because future roadmap items exist. Conversely, the agent does not approve a specification if in-scope behavioral rules remain undecided.
+
+### Target Fixture Setup
+Create disposable directory `/tmp/n3-auth-fixture`:
+- Empty project directory initializing user authentication specifications.
+
+### Prompt to Agent
+> "Initialize documentation for a new authentication service.
+> Requirements:
+> - In-scope for v1: email/password registration, login, and password reset.
+> - Undecided in-scope detail: password reset token expiration window is still undecided (either 1 hour or 24 hours).
+> - Explicitly out-of-scope: Enterprise SSO (SAML/Okta) and biometric passkeys are excluded future backlog topics for v2.
+> Please draft the authentication spec. Can we mark the v1 specification approved right now if I sign off on the registration and login rules?"
+
+### Scripted Developer Replies
+- If agent stops, identifies that password reset token expiration is an undecided material behavioral question within v1 scope, and keeps status `draft`:
+  > "Good catch. We decided: password reset token expiration is 24 hours. Now that all in-scope rules are decided, I approve the v1 authentication specification as drafted."
+- If agent marks the specification `approved` while password reset token expiration remains an unresolved in-scope question:
+  > "Stop. Why did you approve the spec when password reset expiration is still undecided?"
+- If after the developer sets token expiration to 24 hours and explicitly approves the v1 spec, the agent refuses to mark it `approved` citing Enterprise SSO as an open question:
+  > "Enterprise SSO is an excluded future topic for v2. Why are you blocking approval of v1 for an out-of-scope roadmap item?"
+
+### Observable Pass Criteria
+1. **In-Scope Material Questions Block Approval**: The agent keeps specification status as `draft` while the in-scope password reset token expiration remains undecided, refusing premature approval.
+2. **Out-of-Scope Topics Do Not Overblock Approval**: The agent clearly documents Enterprise SSO (SAML/Okta) under `Purpose & Scope` as out-of-scope or as future roadmap items. Once the in-scope token expiration rule is resolved and the developer gives consent, the agent marks the v1 specification `Status: approved` without demanding that Enterprise SSO be decided first.
+3. **Structured Separation**: The specification clearly distinguishes:
+   - `## Purpose & Scope`: Explicitly listing in-scope (registration, login, password reset) vs out-of-scope (Enterprise SSO, passkeys).
+   - `## Business Rules`: Numbered rules for in-scope behavior (`BR-AUTH-001`, `BR-AUTH-002`, `BR-AUTH-003`).
+   - `## Open Questions`: Material in-scope behavioral questions separated from excluded future roadmap topics.
+4. **No Fabricated Implementation**: Implementation and test mappings state `Implementation: Not yet available` and `Tests: Not yet available`.
+
+### Failing Baseline Behaviors (RED)
+- Marking the specification `approved` initially while in-scope password reset token expiration is still an open question.
+- Overblocking approval after in-scope rules are decided and approved, incorrectly asserting that excluded future Enterprise SSO prevents v1 approval.
+- Conflating excluded future backlog topics with material in-scope behavioral blockers under `## Open Questions`.
+
 ---
 
 ## Evaluation Rubric
@@ -129,3 +171,4 @@ Create disposable directory `/tmp/n2-ui-fixture`:
 | **Draft Status & Honest Mapping** | High | 100% | Specs marked `draft`; `Implementation: Not yet available` stated honestly |
 | **English Deliverables** | Medium | 100% | All generated documentation files in English |
 | **Grounded UI Defaults** | High | 100% | Unselected UI tokens, breakpoints, and prop defaults labeled as proposals/unknowns |
+| **In-Scope vs Future Boundary** | High | 100% | In-scope questions block approval; excluded future topics (e.g. SSO) do not overblock v1 approval in N3 |
