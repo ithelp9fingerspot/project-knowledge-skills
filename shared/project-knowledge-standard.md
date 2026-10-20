@@ -55,7 +55,7 @@ Each document has a distinct scope and purpose. Avoid duplicating information ac
 
 ### Development & Standards
 - `docs/development.md`: Prerequisites, local setup, execution commands, environment variable names (never secret values), test execution, and troubleshooting. Other documents link here instead of repeating commands.
-- `docs/standards/coding.md`: Language-specific and framework-specific implementation patterns, naming conventions, error-handling conventions, and links to automated lint/format tooling.
+- `docs/standards/coding.md`: Language-specific and framework-specific implementation patterns, naming conventions, and error-handling conventions grounded in repository configuration and linters. Do not invent generic conventions (e.g. PEP 8, generic style guides) from small fixtures; label unconfigured patterns as proposals until approved.
 - `docs/standards/testing.md`: Testing strategy, test layers (unit, integration, e2e), fixture conventions, assertion styles, and test execution commands.
 - `docs/standards/ui.md`: Component conventions, styling/theming systems, layout patterns, interaction states, accessibility requirements, and code patterns. Does not demand mandatory screen mockups.
 
@@ -88,7 +88,10 @@ Feature-specific terms and definitions aligned with `docs/project.md`.
 Numbered rules with stable identifiers:
 - **BR-[DOMAIN]-[001]**: [Rule statement]
 - **BR-[DOMAIN]-[002]**: [Rule statement]
-
+*Precision rules*:
+- Ground rules strictly in observable code/schema; do not strengthen terminology beyond evidence (e.g. do not turn `GRACE_DAYS = 7` into "calendar days" or "business days" without explicit backing).
+- Distinguish return values from side effects (e.g. an evaluation returning `True` does not mean an entity was cancelled or persistence updated).
+- Do not assert unevidenced architectural guarantees (e.g. thread-safety, distributed atomicity) from identifiers alone.
 ## Data Model & Persistence
 ERD view relevant to this feature (view of the shared data model, not a disconnected schema).
 - Entities, table roles, key columns, and constraints.
@@ -100,14 +103,13 @@ Step-by-step user and system flows:
 2. Step description...
 
 ## Failure Modes & Consistency
-- Validation errors, boundary cases, timeout/concurrency handling.
-- Invariants that must be preserved during partial failures.
-
+- Domain validation errors, boundary cases, and partial-failure consistency invariants.
+- Do NOT elevate low-level language type errors or theoretical constant-type mutations (e.g. "raises `TypeError` if constant is non-numeric") into approved business failure rules.
 ## Acceptance Criteria
-Observable, testable criteria:
+Observable, verifiable criteria formatted as open conditions:
 - [ ] Criterion 1
 - [ ] Criterion 2
-
+*Invariant*: Acceptance criteria are required conditions, NOT execution logs. Never mark criteria as checked `[x]` without observed, verified test execution.
 ## Contracts & Dependencies
 - External APIs, message payloads, webhooks, or service interfaces.
 
@@ -122,10 +124,9 @@ Links to real codebase files:
 ```
 
 ### Specification Status Invariants
-- `draft`: Specification under discovery, review, or containing open questions. Inferred rules from code or tests must remain `draft` until explicitly approved.
+- `draft`: Specification under discovery, review, or containing open questions. Inferred rules from code or tests must remain `draft` until explicitly approved. Implementation presence in code is not specification approval.
 - `approved`: Explicit developer consent has been obtained for all business rules, flows, and criteria.
 - Status describes *specification approval*, not implementation completion.
-
 ---
 
 ## Evidence and Approval
@@ -147,7 +148,7 @@ Links to real codebase files:
   5. Specific decision required from the developer.
 - **No Unilateral Blessing**: Do not bless code over documentation or documentation over code simply because code is newer or tests pass.
 - **Scope Discipline**: Approval for a specific change (e.g. modifying a grace period) does not authorize modifying related pricing, cancellation policies, or architecture.
-
+- **Grounded Precision**: Inferred specifications must not invent generic conventions, elevate language type errors to business rules, invent unevidenced guarantees, or mark acceptance criteria `[x]` without observed test execution.
 ---
 
 ## Legacy Documentation

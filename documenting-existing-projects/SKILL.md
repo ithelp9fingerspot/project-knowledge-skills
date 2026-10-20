@@ -69,12 +69,15 @@ digraph legacy_gate {
 ### Phase 2: Grounded Code Discovery
 1. Use scoped scouts when supported by the host runtime; otherwise inspect files directly.
 2. Read project manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) to identify language, dependencies, and build commands. Do not copy dependency versions into prose documents.
-3. Inspect database schemas, migrations, and ORM models to reconstruct the data model.
-4. Trace entrypoints, API routing, and service logic to identify features and boundaries.
-5. Inspect automated tests to observe developer test expectations.
+3. Inspect linter/formatter configurations to establish coding standards. Never invent generic policies (e.g. PEP 8, generic style guides) from tiny code fixtures; label unconfigured patterns as proposals until approved.
+4. Inspect database schemas, migrations, and ORM models to reconstruct the data model.
+5. Trace entrypoints, API routing, and service logic to identify features and boundaries.
+   - Distinguish return values from side effects (e.g. returning `True` from an eligibility check is not the same as mutating state or cancelling an entity).
+   - Do not strengthen terminology beyond code identifiers (e.g. `GRACE_DAYS = 7` is 7 days, NOT "calendar days" or "business days" without explicit backing).
+   - Do not assert unevidenced architectural guarantees (e.g. thread-safety, atomicity) without explicit concurrency primitives.
+6. Inspect automated tests to observe developer test expectations.
    - **Crucial**: Existing tests prove implementation expectations and assertions, NOT approved business intent.
    - Code-derived rules must remain in `draft` status until explicitly approved by the developer.
-
 ### Phase 3: Target File Mapping & Scope Disclosure
 Present the planned documentation mapping to the developer before writing files:
 - Files to create (e.g. `AGENTS.md`, `CLAUDE.md`, `docs/project.md`, `docs/architecture.md`, `docs/data-model.md`, `docs/specs/...`).
@@ -101,13 +104,14 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 1. Author documentation according to the [Project Knowledge Standard](references/project-knowledge-standard.md).
 2. **Language Invariant**: All generated documentation files must be in **English**, regardless of the user's prompt language or legacy document language.
 3. **Identifier Preservation**: Preserve exact code identifiers, method names, table columns, and error strings.
-4. **Thin CLAUDE Entrypoint**: Generate `CLAUDE.md` solely as a relative Markdown link pointing to `AGENTS.md`. Do not duplicate instructions.
-5. Verify:
+4. **No Invented Failure Rules**: Do not elevate low-level language runtime type errors (e.g. `TypeError` on invalid constant types) into approved business failure rules.
+5. **Open Acceptance Criteria**: Acceptance criteria must remain open checkboxes `[ ]`. NEVER mark them checked `[x]` without observed test execution.
+6. **Thin CLAUDE Entrypoint**: Generate `CLAUDE.md` solely as a relative Markdown link pointing to `AGENTS.md`. Do not duplicate instructions.
+7. Verify:
    - Check all relative Markdown links.
    - Check feature ERDs match the shared data model in `docs/data-model.md`.
    - Confirm unapproved specs remain marked `draft`.
    - Ensure no temporary discovery artifacts or `changes/` folders were created.
-
 ---
 
 ## Rationalization Table & Red Flags
@@ -120,15 +124,21 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 | "Code is newer and unit tests pass, so the code behavior is the approved rule." | Green tests prove code consistency, not business authorization. An implemented bug has green tests. | Present the discrepancy neutrally with evidence from both sources. Await developer decision. |
 | "The user asked in another language, so I should write docs in that language." | Project knowledge documentation must be universally portable across agents and tools in English. | Conversational replies follow user language, but generated repository documents are strictly English. |
 | "The feature is implemented, so its spec status is `approved`." | Status `approved` reflects developer specification consent, not implementation completion. | Keep status `draft` until explicit developer sign-off. |
-
+| "The code runs and tests pass, so I can check off acceptance criteria `[x]`." | Acceptance criteria in specs are requirements to verify, not past test execution logs. | Keep criteria as open `[ ]`; never check `[x]` without observed execution. |
+| "The code is Python, so I should set PEP 8 as the coding standard." | Coding standards must be grounded in actual repo linter/formatter configuration, not assumed. | Ground in config files or label unconfigured patterns as proposals until approved. |
+| "Every exception path is a business failure rule." | Language-level runtime type errors on hypothetical invalid constants are technical edge cases, not business rules. | Restrict failure modes to domain business logic and consistency invariants. |
+| "GRACE_DAYS = 7 implies 7 calendar days and guaranteed thread-safety." | Terminology must not be strengthened beyond evidence; variable names do not guarantee concurrency safety. | State exact observed definitions; avoid adding 'calendar/business' or claiming unverified safety. |
 ## Red Flags - STOP and Ask
 - Reading `README.md` or `docs/*.md` prose before legacy choices are answered.
 - Citing excluded legacy documentation as evidence in feature specs.
 - Overwriting or deleting files outside disclosed standard paths or specifically authorized replacements.
 - Marking a feature spec `approved` without explicit developer confirmation.
 - Silently resolving a contradiction between code and documentation.
+- Marking acceptance criteria as checked `[x]` without observed test execution.
+- Inventing generic coding standards (e.g. PEP 8) without tooling configuration.
+- Strengthening terminology (e.g. calendar/business days) or asserting unevidenced thread-safety.
+- Elevating language runtime type errors into approved business failure rules.
 - Generating documentation in a language other than English.
-
 ---
 
 ## Quick Reference: Two Legacy Choices
