@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synchronize shared project-knowledge-standard.md to standalone skill packages."""
+"""Synchronize canonical project knowledge references to standalone skill packages."""
 
 import argparse
 from pathlib import Path
@@ -12,43 +12,42 @@ SKILL_DIRECTORIES = (
     "skills/working-with-project-specs",
 )
 
-CANONICAL_RELPATH = Path("shared") / "project-knowledge-standard.md"
-TARGET_RELPATH = Path("references") / "project-knowledge-standard.md"
+SYNC_FILES: tuple[tuple[Path, Path], ...] = (
+    (Path("shared/project-knowledge-standard.md"), Path("references/project-knowledge-standard.md")),
+    (Path("shared/project-knowledge-authoring.md"), Path("references/project-knowledge-authoring.md")),
+)
 
 
 def sync_references(root: Path, check: bool) -> list[Path]:
-    """Check or synchronize the canonical reference across skill packages.
+    """Return drifted targets, repairing them unless check mode is requested.
 
-    Returns the list of missing or different destination paths.
-    In write mode (check=False), copies canonical reference to drifted destinations.
-    In check mode (check=True), performs no filesystem writes.
-    Raises FileNotFoundError if the canonical source does not exist.
+    Load every canonical input before writing so a missing source never causes
+    a partial update. Check mode performs no filesystem writes.
     """
     root = Path(root)
-    canonical = root / CANONICAL_RELPATH
-    if not canonical.is_file():
-        raise FileNotFoundError(f"Canonical reference not found: {canonical}")
+    sources = []
+    for source, target in SYNC_FILES:
+        canonical = root / source
+        if not canonical.is_file():
+            raise FileNotFoundError(f"Canonical reference not found: {canonical}")
+        sources.append((target, canonical.read_bytes()))
 
-    canonical_bytes = canonical.read_bytes()
     drift: list[Path] = []
-
-    for skill in SKILL_DIRECTORIES:
-        dest = root / skill / TARGET_RELPATH
-        if not dest.is_file() or dest.read_bytes() != canonical_bytes:
-            drift.append(dest)
-
-    if not check:
-        for dest in drift:
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            dest.write_bytes(canonical_bytes)
-
+    for target, canonical_bytes in sources:
+        for skill in SKILL_DIRECTORIES:
+            dest = root / skill / target
+            if not dest.is_file() or dest.read_bytes() != canonical_bytes:
+                drift.append(dest)
+                if not check:
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    dest.write_bytes(canonical_bytes)
     return drift
 
 
 def main(argv: list[str] | None = None) -> int:
     """CLI entrypoint rooting at the script's repository."""
     parser = argparse.ArgumentParser(
-        description="Synchronize canonical project-knowledge-standard.md to standalone skills."
+        description="Synchronize canonical project knowledge references to standalone skills."
     )
     parser.add_argument(
         "--check",

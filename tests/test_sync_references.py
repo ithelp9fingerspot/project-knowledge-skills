@@ -15,8 +15,10 @@ SKILL_DIRECTORIES = (
     "skills/initializing-project-knowledge",
     "skills/working-with-project-specs",
 )
-CANONICAL_RELPATH = Path("shared") / "project-knowledge-standard.md"
-TARGET_RELPATH = Path("references") / "project-knowledge-standard.md"
+SYNC_FILES = (
+    (Path("shared/project-knowledge-standard.md"), Path("references/project-knowledge-standard.md")),
+    (Path("shared/project-knowledge-authoring.md"), Path("references/project-knowledge-authoring.md")),
+)
 
 
 class TestSyncReferences(unittest.TestCase):
@@ -47,23 +49,18 @@ class TestSyncReferences(unittest.TestCase):
         destinations_content maps skill name -> content string (or None to omit file).
         If destinations_content is None, all 4 destinations match canonical_content.
         """
-        canonical_file = base_dir / CANONICAL_RELPATH
+        canonical_file = base_dir / SYNC_FILES[0][0]
         canonical_file.parent.mkdir(parents=True, exist_ok=True)
         canonical_file.write_text(canonical_content, encoding="utf-8")
+        (base_dir / SYNC_FILES[1][0]).write_bytes(b"# Authoring Guide\n")
 
         for skill in SKILL_DIRECTORIES:
             ref_dir = base_dir / skill / "references"
             ref_dir.mkdir(parents=True, exist_ok=True)
-            if destinations_content is None:
-                (ref_dir / "project-knowledge-standard.md").write_text(
-                    canonical_content, encoding="utf-8"
-                )
-            else:
-                content = destinations_content.get(skill)
-                if content is not None:
-                    (ref_dir / "project-knowledge-standard.md").write_text(
-                        content, encoding="utf-8"
-                    )
+            (ref_dir / SYNC_FILES[1][1].name).write_bytes(b"# Authoring Guide\n")
+            content = canonical_content if destinations_content is None else destinations_content.get(skill)
+            if content is not None:
+                (ref_dir / SYNC_FILES[0][1].name).write_text(content, encoding="utf-8")
         return base_dir
 
     def test_check_mode_reports_drift_without_mutation(self):
@@ -83,10 +80,10 @@ class TestSyncReferences(unittest.TestCase):
                 repo_dir, canonical_content=canonical_text, destinations_content=destinations
             )
 
-            file0 = repo_dir / SKILL_DIRECTORIES[0] / TARGET_RELPATH
-            file1 = repo_dir / SKILL_DIRECTORIES[1] / TARGET_RELPATH
-            file2 = repo_dir / SKILL_DIRECTORIES[2] / TARGET_RELPATH
-            file3 = repo_dir / SKILL_DIRECTORIES[3] / TARGET_RELPATH
+            file0 = repo_dir / SKILL_DIRECTORIES[0] / SYNC_FILES[0][1]
+            file1 = repo_dir / SKILL_DIRECTORIES[1] / SYNC_FILES[0][1]
+            file2 = repo_dir / SKILL_DIRECTORIES[2] / SYNC_FILES[0][1]
+            file3 = repo_dir / SKILL_DIRECTORIES[3] / SYNC_FILES[0][1]
 
             mtime0 = file0.stat().st_mtime_ns
             mtime1 = file1.stat().st_mtime_ns
@@ -135,7 +132,7 @@ class TestSyncReferences(unittest.TestCase):
             drifted_repaired = self.sync_references(repo_dir, check=False)
 
             expected_paths = {
-                repo_dir / s / TARGET_RELPATH for s in SKILL_DIRECTORIES
+                repo_dir / s / SYNC_FILES[0][1] for s in SKILL_DIRECTORIES
             }
             # The returned list represents the paths that were missing/different and repaired
             self.assertEqual(len(drifted_repaired), 4)
@@ -143,7 +140,7 @@ class TestSyncReferences(unittest.TestCase):
 
             # Verify every destination now matches canonical exactly
             for skill in SKILL_DIRECTORIES:
-                dest = repo_dir / skill / TARGET_RELPATH
+                dest = repo_dir / skill / SYNC_FILES[0][1]
                 self.assertTrue(dest.exists(), f"Destination {dest} should exist")
                 self.assertEqual(dest.read_text(encoding="utf-8"), canonical_text)
 
@@ -167,7 +164,7 @@ class TestSyncReferences(unittest.TestCase):
             extra_file3.write_text("# Another standard\n", encoding="utf-8")
 
             # Introduce drift into one skill reference
-            drift_target = repo_dir / SKILL_DIRECTORIES[2] / TARGET_RELPATH
+            drift_target = repo_dir / SKILL_DIRECTORIES[2] / SYNC_FILES[0][1]
             drift_target.write_text("# Drifted\n", encoding="utf-8")
 
             repaired = self.sync_references(repo_dir, check=False)
@@ -197,16 +194,16 @@ class TestSyncReferences(unittest.TestCase):
             repo_dir = Path(td)
 
             # Create skill reference directories with some drifted content
-            dest0 = repo_dir / SKILL_DIRECTORIES[0] / TARGET_RELPATH
+            dest0 = repo_dir / SKILL_DIRECTORIES[0] / SYNC_FILES[0][1]
             dest0.parent.mkdir(parents=True, exist_ok=True)
             dest0.write_text("# Existing before canonical error\n", encoding="utf-8")
             mtime0 = dest0.stat().st_mtime_ns
 
-            dest1 = repo_dir / SKILL_DIRECTORIES[1] / TARGET_RELPATH
+            dest1 = repo_dir / SKILL_DIRECTORIES[1] / SYNC_FILES[0][1]
             # dest1 does not exist
 
             # Ensure shared/ canonical file does NOT exist
-            canonical_file = repo_dir / CANONICAL_RELPATH
+            canonical_file = repo_dir / SYNC_FILES[0][0]
             self.assertFalse(canonical_file.exists())
 
             # Check mode should raise FileNotFoundError
@@ -294,7 +291,7 @@ class TestSyncReferences(unittest.TestCase):
             fake_script.parent.mkdir(parents=True, exist_ok=True)
             fake_script.write_bytes(SCRIPT_PATH.read_bytes())
 
-            drift_file = fake_repo / SKILL_DIRECTORIES[0] / TARGET_RELPATH
+            drift_file = fake_repo / SKILL_DIRECTORIES[0] / SYNC_FILES[0][1]
 
             # 1. --check exits 1 on drift, no mutation
             check_result = subprocess.run(
@@ -324,6 +321,73 @@ class TestSyncReferences(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(subsequent_check.returncode, 0)
+
+    def _snapshot(self, root):
+        return {
+            str(path.relative_to(root)): (path.read_bytes(), path.stat().st_mtime_ns)
+            for path in root.rglob("*") if path.is_file()
+        }
+
+    def test_mixed_reference_drift_is_reported_without_any_mutation(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = self._create_repo_structure(Path(td))
+            stale = root / SKILL_DIRECTORIES[0] / SYNC_FILES[0][1]
+            missing = root / SKILL_DIRECTORIES[2] / SYNC_FILES[1][1]
+            stale.write_bytes(b"stale standard")
+            missing.unlink()
+            before = self._snapshot(root)
+            self.assertEqual(set(self.sync_references(root, check=True)), {stale, missing})
+            self.assertEqual(self._snapshot(root), before)
+
+    def test_write_repairs_both_reference_types_and_preserves_unrelated_files(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = self._create_repo_structure(Path(td))
+            unrelated = root / SKILL_DIRECTORIES[0] / "references/notes.md"
+            unrelated.write_bytes(b"independent notes\x00")
+            expected = set()
+            for skill in SKILL_DIRECTORIES:
+                for _, target in SYNC_FILES:
+                    dest = root / skill / target
+                    dest.unlink()
+                    expected.add(dest)
+            self.assertEqual(set(self.sync_references(root, check=False)), expected)
+            for skill in SKILL_DIRECTORIES:
+                for source, target in SYNC_FILES:
+                    self.assertEqual((root / skill / target).read_bytes(), (root / source).read_bytes())
+            self.assertEqual(unrelated.read_bytes(), b"independent notes\x00")
+            self.assertEqual(self.sync_references(root, check=True), [])
+
+    def test_either_missing_source_aborts_before_all_writes(self):
+        for source, _ in SYNC_FILES:
+            for check in (True, False):
+                with self.subTest(source=source, check=check), tempfile.TemporaryDirectory() as td:
+                    root = self._create_repo_structure(Path(td))
+                    stale = root / SKILL_DIRECTORIES[0] / SYNC_FILES[0][1]
+                    stale.write_bytes(b"must survive missing later source")
+                    (root / source).unlink()
+                    before = self._snapshot(root)
+                    with self.assertRaises(FileNotFoundError):
+                        self.sync_references(root, check=check)
+                    self.assertEqual(self._snapshot(root), before)
+
+    def test_authoring_cli_drift_repair_from_external_directory(self):
+        with tempfile.TemporaryDirectory() as td, tempfile.TemporaryDirectory() as cwd:
+            root = self._create_repo_structure(Path(td))
+            script = root / "scripts/sync-references.py"
+            script.parent.mkdir()
+            script.write_bytes(SCRIPT_PATH.read_bytes())
+            target = root / SKILL_DIRECTORIES[1] / SYNC_FILES[1][1]
+            target.write_bytes(b"old authoring")
+            before = self._snapshot(root)
+            command = [sys.executable, str(script)]
+            result = subprocess.run(command + ["--check"], cwd=cwd, capture_output=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertEqual(self._snapshot(root), before)
+            result = subprocess.run(command, cwd=cwd, capture_output=True)
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(target.read_bytes(), b"# Authoring Guide\n")
+            result = subprocess.run(command + ["--check"], cwd=cwd, capture_output=True)
+            self.assertEqual(result.returncode, 0)
 
 
 if __name__ == "__main__":
