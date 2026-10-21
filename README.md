@@ -89,8 +89,8 @@ AGENTS.md                     # Shared agent instruction entrypoint and map
 CLAUDE.md                     # Single-line Claude import of AGENTS.md
 docs/
   README.md                   # Task-oriented documentation navigation
-  project.md                  # Purpose, users, glossary, stack manifests
-  architecture.md             # Module boundaries, dependencies, design rationale
+  project.md                  # Purpose, users, glossary, technology references
+  architecture.md             # Tech Stack, Repository Map, boundaries, design rationale
   data-model.md               # App-wide ERD and entities (when persistent data exists)
   development.md              # Prerequisites, setup, commands, troubleshooting
   standards/

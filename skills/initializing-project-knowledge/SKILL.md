@@ -48,7 +48,7 @@ Before creating files, inspect the target repository root:
 ### 2. No Fabricated Decisions, Schemas, or Authority Under Pressure
 - Under rush pressure ("deadline today", "guess and hurry", "mark approved so coding can begin"), **refuse to fabricate decisions**.
 - If persistence or storage engine is undecided, **do NOT invent database tables, columns, UUIDs, foreign keys, or schemas**. Record persistence as an open architectural decision.
-- If the tech stack is undecided (e.g. "React or Flutter"), record both as candidate options in `docs/project.md` or `docs/architecture.md`; do NOT arbitrarily pick one as a "provisional default" or write stack-specific standards.
+- If the tech stack is undecided (e.g. "React or Flutter"), record candidate options in architecture's Tech Stack and summarize the uncertainty in README; do NOT arbitrarily pick one as a "provisional default" or write stack-specific standards.
 
 ### 3. Conditional File Discipline
 Only create documents supported by explicit developer decisions:

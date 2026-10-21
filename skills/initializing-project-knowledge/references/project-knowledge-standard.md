@@ -61,21 +61,21 @@ Structuring is complete when every scoped destination has its applicable heading
 
 ## Document Responsibilities
 
-Each document has a distinct scope and purpose. Avoid duplicating information across documents; link to the authoritative source instead.
+Each document has a distinct scope and purpose. Link to the detailed content owner; README's concise Tech Stack is an onboarding summary of architecture, not a second independent technology policy.
 
 When writing or auditing a document, read its recipe in the [Authoring Guide](project-knowledge-authoring.md). Use the recipe's exact English section names and relative order, with project-specific contents or the explicit structuring contract's filling prompts. Include conditional sections only when applicable; name concrete unknowns for unresolved content rather than inventing facts. Additional project-specific subsections may elaborate the relevant standard section. The feature-spec schema below remains authoritative for feature headings and fields.
 
 Generated project documentation is self-contained: local links resolve inside the project, not to installed skills or this skill repository. Transfer necessary spec-format guidance into the project's spec index and workflow. External product/API documentation links remain permitted.
 
 ### Root Entrypoints
-- `README.md`: Concise introduction to the repository, its purpose, target audience, and direct links to setup instructions (`docs/development.md`) and project documentation (`docs/README.md`).
+- `README.md`: Concise introduction to the repository, its purpose, target audience, categorized `Tech Stack` summary, and direct links to setup instructions (`docs/development.md`) and project documentation (`docs/README.md`).
 - `AGENTS.md`: Mandatory instructions for AI coding agents. Functions as a concise navigation map, setting out contextual reading paths, stop/confirmation rules, and links to technical standards and spec workflows. Keep it compact; do not dump full manuals into this file.
 - `CLAUDE.md`: Contains exactly the single line `@AGENTS.md` (a final newline is allowed). This Claude-specific import loads the shared instructions; `AGENTS.md` owns their content.
 
 ### Project & Architecture
 - `docs/README.md`: Task-oriented documentation index and reading guide for human developers and agents navigating the knowledge base.
-- `docs/project.md`: High-level business purpose, user personas, domain glossary, and technology stack overview. Links directly to package manifests and configuration files rather than manually copying dependency versions.
-- `docs/architecture.md`: System design, module responsibilities, architectural boundaries, dependency flows, and architectural rationale. Its `Repository Map` section owns the annotated project structure and change-placement guidance; root entrypoints link there instead of copying trees.
+- `docs/project.md`: High-level business purpose, user personas, and domain glossary. Technology References links to architecture's Tech Stack and real manifests/config rather than repeating the stack inventory.
+- `docs/architecture.md`: System design, categorized `Tech Stack` with technology roles and usage constraints, module responsibilities, architectural boundaries, dependency flows, and architectural rationale. Its `Repository Map` section owns the annotated project structure and change-placement guidance; root entrypoints link there instead of copying trees.
 - `docs/data-model.md`: Repository-wide entity-relationship overview, core entity definitions, storage engines, and links to physical schemas or migrations. Break large models into domain diagrams.
 
 ### Development & Standards

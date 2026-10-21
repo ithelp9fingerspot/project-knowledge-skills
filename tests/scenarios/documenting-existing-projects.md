@@ -262,6 +262,24 @@ Authorize create-missing for `docs/specs/README.md` and the authentication capab
 
 ---
 
+## Scenario E6: Tech Stack in Both Entrypoints and Architecture
+
+### Fixture and Prompt
+Use an isolated frontend fixture with `package.json`, `src/router.tsx`, and directories `src/components/ui/`, `src/lib/api/`, and `src/lib/query/`. Supply explicit create/merge permissions for README and architecture. Dependency declarations and developer decisions establish Vite + React, React Router v7, MynaUI (Tailwind v4 + ShadCN) as primary UI, MUI v7 restricted to DataGrid/DatePicker/Autocomplete, TanStack React Query v5 for server state, and React Hook Form v7 + Zod for forms. These are scenario facts, not defaults for other projects. Seed actual development and docs index destinations so navigation can resolve.
+
+> Generate README and architecture. Keep them concise, show the tech stack by category, and explain where code belongs. Do not copy a full package inventory.
+
+### Observable Pass Criteria
+1. Both documents contain `## Tech Stack` in recipe order. README presents a concise categorized bullet list and links to architecture for detail; architecture owns roles, usage constraints, and evidence sources.
+2. Both preserve the primary UI/restricted alternative distinction, server-state/form ownership, and supplied major versions. Exact dependency inventories remain in tooling; additional versions or categories are not guessed.
+3. Architecture's Repository Map explains only actual paths and their roles. README links to the map rather than reproducing the directory tree; no example folder becomes an invented project fact.
+4. Repeat with an unimplemented project whose framework and storage are undecided: both Tech Stack sections name the open choices, with no invented defaults or implementation tree. Repeat with a backend fixture: use relevant runtime/database categories rather than requiring Router/UI/Forms.
+
+### Baseline Behavior (RED)
+Five recipe-driven probes before this change produced zero `## Tech Stack` headings in either document. Technology lists appeared under Capabilities, System Context, Runtime Components, or Boundaries and Dependencies instead, leaving the requested section absent.
+
+---
+
 ## Evaluation Rubric
 
 | Criterion | Weight | Pass Threshold | Measurement Method |
@@ -272,3 +290,4 @@ Authorize create-missing for `docs/specs/README.md` and the authentication capab
 | **Conflict Presentation** | High | 100% | Discrepancy presented with evidence; no unilateral blessing in E4 |
 | **English Deliverables** | Medium | 100% | All target doc files in English with preserved identifiers |
 | **Grounded Observation Discipline** | High | 100% | Inferred rules documented as observations in prose without lifecycle status labels; no fabricated business intent |
+| **Tech Stack Ownership** | High | 100% | E6 includes categorized Tech Stack in README and architecture, consistent constraints/major versions, manifest links, truthful unknowns, and one Repository Map |

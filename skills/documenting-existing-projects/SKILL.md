@@ -68,7 +68,7 @@ flowchart TD
 
 ### Phase 2: Grounded Code Discovery
 1. Use scoped scouts when supported by the host runtime; otherwise inspect files directly.
-2. Read project manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) to identify language, dependencies, and build commands. Do not copy dependency versions into prose documents.
+2. Read project manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) to identify language, dependencies, and build commands. Apply the Authoring Guide's Tech Stack and version policy when documenting technology choices.
 3. Inspect linter/formatter configurations to establish coding standards. Never invent generic policies (e.g. PEP 8, generic style guides) from tiny code fixtures; label unconfigured patterns as proposals until approved.
 4. Inspect database schemas, migrations, and ORM models to reconstruct the data model.
 5. Before choosing spec files, read the [capability-boundary contract](references/project-knowledge-standard.md#capability-boundaries). Inventory every in-scope capability by tracing entrypoints, routes, service operations, schema effects, and tests; domain names are grouping labels, not completed specs. Apply the contract's grouping and coverage rules rather than using one overview or one file per endpoint.

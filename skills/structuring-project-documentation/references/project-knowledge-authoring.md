@@ -14,7 +14,7 @@ Select applicable sections before drafting. A conditional section whose predicat
 
 Inspect evidence permitted by the standard, including its legacy-source gate. Distinguish implemented behavior, proposed choices, and approved intent. With legacy prose excluded as a source, preservation permission only authorizes retaining its content: a preserved statement does not become a business-rule source, conflict candidate, or basis for new open questions. Illustrative examples below are not project facts, default architectures, or reusable business rules.
 
-Keep one content owner. Tooling owns command definitions and versions; documentation explains non-obvious use, sequencing, rationale, and hazards. Generated project documents must resolve local links inside that project, not depend on this guide, installed skills, or the skill repository. External product/API references are allowed. Transfer necessary spec-format and workflow guidance into the project's own spec index/workflow rather than linking back to skill references.
+Keep one detailed content owner. Tooling owns exact command definitions and dependency versions; documentation explains non-obvious use, sequencing, rationale, and hazards. Tech Stack summaries may name an evidenced or explicitly agreed major version when it identifies an architectural choice; link its manifest/config source rather than reproducing a dependency inventory. Generated project documents must resolve local links inside that project, not depend on this guide, installed skills, or the skill repository. External product/API references are allowed. Transfer necessary spec-format and workflow guidance into the project's own spec index/workflow rather than linking back to skill references.
 
 ## README.md
 
@@ -28,14 +28,15 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 1. `## Purpose`: State the problem and scope in project terms.
 2. `## Audience`: Identify the actual users or maintainers; record uncertainty if not established.
 3. `## Capabilities`: Summarize evidenced capabilities; label planned behavior as planned.
-4. `## Getting Started`: Link to local development instructions, with any supported prerequisite context.
-5. `## Documentation`: Link to the docs index, agent instructions, and architecture's repository map when those exist.
+4. `## Tech Stack`: Give a concise categorized bullet list of the project's technologies and their roles, following architecture's Tech Stack. Include relevant usage constraints such as a primary UI system versus restricted alternatives; use only evidenced or explicitly agreed choices. For undecided categories, name the unresolved choice. Link to architecture for detail.
+5. `## Getting Started`: Link to local development instructions, with any supported prerequisite context.
+6. `## Documentation`: Link to the docs index, agent instructions, and architecture's repository map when those exist.
 
-**Content Boundaries:** Setup procedures belong in development; business rules in specs; detailed structure in architecture. Add links only to actual destinations, not a future scaffold.
+**Content Boundaries:** README owns the onboarding summary, architecture owns detailed technology roles and constraints. Setup procedures belong in development; business rules in specs; detailed structure in architecture. Add links only to actual destinations, not a future scaffold.
 
 **Example:** Illustrative navigation: `For local setup, see [Development](docs/development.md).` Use it only after that file exists in the target.
 
-**Done When:** A newcomer can identify purpose, audience, current versus planned capabilities, and the next reading step; destinations resolve and setup/map content has one owner.
+**Done When:** A newcomer can identify purpose, audience, current versus planned capabilities, the categorized tech stack, and the next reading step; stack summaries agree with architecture and destinations resolve.
 
 ## AGENTS.md
 
@@ -116,9 +117,9 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 2. `## Actors`: Describe established personas and responsibilities; distinguish users from external systems.
 3. `## Domain Boundaries`: Identify actual domains and their responsibilities without prescribing a domain-driven architecture.
 4. `## Glossary`: Define shared terms; preserve identifiers and resolve uncertain translations with the developer.
-5. `## Technology References`: Link to real manifests/config and explain non-obvious choices; name undecided stack decisions when appropriate.
+5. `## Technology References`: Link to architecture's Tech Stack and real manifests/config. Keep technology responsibilities and undecided stack choices in architecture.
 
-**Content Boundaries:** Feature-specific terms refine rather than redefine this glossary. Version lists belong to tooling, technical boundaries to architecture, and detailed rules to specs.
+**Content Boundaries:** Feature-specific terms refine rather than redefine this glossary. Exact dependency versions belong to tooling, technology roles and technical boundaries to architecture, and detailed rules to specs.
 
 **Example:** Illustrative glossary distinction: explain whether a project's `Account` means a customer organization or a login identity, based on its own usage rather than a generic definition.
 
@@ -134,14 +135,15 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 
 **Outline and Writing Instructions:**
 
-Required sequence: `## System Context`, `## Repository Map`, `## Boundaries and Dependencies`, `## Key Flows`, `## Rationale`.
+Required sequence: `## System Context`, `## Tech Stack`, `## Repository Map`, `## Boundaries and Dependencies`, `## Key Flows`, `## Rationale`.
 - System Context: State system responsibility and evidenced external boundaries.
+- Tech Stack: Own the detailed categorized technology list, each technology's role, and evidenced or explicitly agreed usage boundaries. Use project-relevant categories (for example Framework, Router, UI, Server State, Forms, Runtime, or Database), not a fixed frontend checklist. Distinguish primary choices from restricted alternatives; identify source manifests/config or explicit decisions. Name undecided selections instead of choosing defaults. README summarizes this section.
 - Repository Map: Own the canonical structure. Choose a selective annotated tree or responsibility table. Explain module roles, change placement, and generated sources/regeneration links when present. For an empty project, name the undecided implementation layout instead of supplying a hypothetical tree.
 - Boundaries and Dependencies: Explain evidenced dependency directions and ownership, separating observations from approved requirements.
 - Key Flows: Describe actual or explicitly agreed cross-component flows; otherwise name the unresolved flow decision.
 - Rationale: Explain backed reasons, distinguish unknown historical rationale, and link durable later ADRs where present.
 
-Conditional insertion, after System Context:
+Conditional insertion, after Tech Stack:
 - Include when: actual runtime behavior exists or specific runtime processes are explicitly decided. Insert `## Runtime Components` and describe those processes and communication; label decided-but-unimplemented components as planned. If only a product idea exists, omit this heading and record topology uncertainty in System Context.
 
 **Content Boundaries:** Repository Map owns semantic project structure; README and AGENTS link here. Keep feature code/test mappings in their specs and physical schema detail in data-model/schema sources. Repository Map links to adjacent dependency rules rather than repeating them.
