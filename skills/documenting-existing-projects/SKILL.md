@@ -14,6 +14,7 @@ Establishes standardized repository documentation from an existing codebase thro
 - Establishing repository standards (`AGENTS.md`, `docs/`) for a project that lacks them.
 
 ## When NOT to Use
+- Scaffolding formats or reorganizing selected existing docs without code discovery (use `structuring-project-documentation`; existing code does not change that routing).
 - Creating a brand new, empty, or un-implemented project (use `initializing-project-knowledge`).
 - Updating specs for day-to-day feature work or bugfixes (use `working-with-project-specs`).
 - Verifying existing documentation against code in a read-only audit (use `auditing-project-knowledge`).
@@ -77,7 +78,7 @@ digraph legacy_gate {
    - Do not assert unevidenced architectural guarantees (e.g. thread-safety, atomicity) without explicit concurrency primitives.
 6. Inspect automated tests to observe developer test expectations.
    - **Crucial**: Existing tests prove implementation expectations and assertions, NOT approved business intent.
-   - Code-derived rules must remain in `draft` status until explicitly approved by the developer.
+   - Describe code-derived claims as observed behavior with their sources, not developer-endorsed requirements.
 ### Phase 3: Target File Mapping & Scope Disclosure
 Present the planned documentation mapping to the developer before writing files:
 - Files to create (e.g. `AGENTS.md`, `CLAUDE.md`, `docs/project.md`, `docs/architecture.md`, `docs/data-model.md`, `docs/specs/...`).
@@ -94,11 +95,8 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
   3. Risk or behavioral impact.
   4. Specific question/decision needed from the developer.
 
-### Phase 5: Developer Approval Gate
-1. Present inferred feature specifications and architectural overview.
-2. Mark all business rules and feature specs as `draft`.
-3. Obtain explicit developer consent before marking any specification `approved`.
-4. If replace mode was selected, obtain explicit authorization for the file replacement mapping.
+### Phase 5: Generation Boundaries
+Generate the requested documents from permitted evidence without owner assignment or administrative sign-off. Record unresolved behavioral questions and source conflicts rather than silently deciding them. If replace mode was selected, obtain any still-missing authorization for the disclosed replacement mapping; explicit authorization already supplied is sufficient.
 
 ### Phase 6: Documentation Generation & Verification
 1. Author documentation according to the [Project Knowledge Standard](references/project-knowledge-standard.md). At this writing phase, read only the affected file recipes in the [Authoring Guide](references/project-knowledge-authoring.md); apply their headings/order using permitted project evidence. Use [AGENTS guidance](references/project-knowledge-authoring.md#agentsmd) for task conditions and [architecture guidance](references/project-knowledge-authoring.md#docsarchitecturemd) for the single authoritative Repository Map. Preserve the earlier legacy-source and write-mode decisions.
@@ -106,11 +104,11 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 3. **Identifier Preservation**: Preserve exact code identifiers, method names, table columns, and error strings.
 4. **No Invented Failure Rules**: Do not elevate low-level language runtime type errors (e.g. `TypeError` on invalid constant types) into approved business failure rules.
 5. **Open Acceptance Criteria**: Acceptance criteria must remain open checkboxes `[ ]`. NEVER mark them checked `[x]` without observed test execution.
-6. **Thin CLAUDE Entrypoint**: Generate `CLAUDE.md` solely as a relative Markdown link pointing to `AGENTS.md`. Do not duplicate instructions.
+6. **Thin CLAUDE Entrypoint**: Apply the exact [CLAUDE recipe](references/project-knowledge-authoring.md#claudemd); verify its import target exists.
 7. Verify:
    - Check all relative Markdown links.
    - Check feature ERDs match the shared data model in `docs/data-model.md`.
-   - Confirm unapproved specs remain marked `draft`.
+   - Confirm observations and intended requirements remain distinguishable, with no administrative lifecycle fields.
    - Ensure no temporary discovery artifacts or `changes/` folders were created.
 ---
 
@@ -123,7 +121,7 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 | "User said REPLACE docs and clean everything up, so I can wipe `docs/`." | Replacing docs never authorizes blanket directory deletion or deleting undisclosed/unauthorized compliance or ops docs. | Propose a narrow file mapping of standard paths and authorized nonstandard sources to replace/relocate. Leave undisclosed unique files untouched. |
 | "Code is newer and unit tests pass, so the code behavior is the approved rule." | Green tests prove code consistency, not business authorization. An implemented bug has green tests. | Present the discrepancy neutrally with evidence from both sources. Await developer decision. |
 | "The user asked in another language, so I should write docs in that language." | Project knowledge documentation must be universally portable across agents and tools in English. | Conversational replies follow user language, but generated repository documents are strictly English. |
-| "The feature is implemented, so its spec status is `approved`." | Status `approved` reflects developer specification consent, not implementation completion. | Keep status `draft` until explicit developer sign-off. |
+| "The feature is implemented, so its inferred rules are endorsed requirements." | Implementation demonstrates current behavior, not developer intent. | Generate sourced observations and record unresolved intent without requesting administrative sign-off. |
 | "The code runs and tests pass, so I can check off acceptance criteria `[x]`." | Acceptance criteria in specs are requirements to verify, not past test execution logs. | Keep criteria as open `[ ]`; never check `[x]` without observed execution. |
 | "The code is Python, so I should set PEP 8 as the coding standard." | Coding standards must be grounded in actual repo linter/formatter configuration, not assumed. | Ground in config files or label unconfigured patterns as proposals until approved. |
 | "Every exception path is a business failure rule." | Language-level runtime type errors on hypothetical invalid constants are technical edge cases, not business rules. | Restrict failure modes to domain business logic and consistency invariants. |
@@ -132,7 +130,7 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 - Reading `README.md` or `docs/*.md` prose before legacy choices are answered.
 - Citing excluded legacy documentation as evidence in feature specs.
 - Overwriting or deleting files outside disclosed standard paths or specifically authorized replacements.
-- Marking a feature spec `approved` without explicit developer confirmation.
+- Presenting code-derived observations as developer-endorsed requirements without evidence.
 - Silently resolving a contradiction between code and documentation.
 - Marking acceptance criteria as checked `[x]` without observed test execution.
 - Inventing generic coding standards (e.g. PEP 8) without tooling configuration.

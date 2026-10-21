@@ -36,6 +36,7 @@ digraph audit_workflow {
 
 ## When NOT to Use
 
+- Creating outlines or restructuring selected docs without implementation validation (use `structuring-project-documentation`).
 - Documenting an existing repository or generating missing documentation from scratch (use `documenting-existing-projects`).
 - Initializing documentation for a greenfield or un-implemented project (use `initializing-project-knowledge`).
 - Updating specifications or reconciling approved business rule changes (use `working-with-project-specs`).
@@ -62,10 +63,9 @@ NEVER MUTATE TARGET FILES. NEVER CREATE UNREQUESTED AUDIT FILES.
 4. **No Unilateral Blessing or Approval**:
    - Automated link checks passing does NOT mean documentation is valid or approved.
    - When code contradicts a spec, do not declare code "correct" or spec "correct". Present the divergence neutrally.
-   - An audit never marks a spec `approved` or blesses unapproved behavior.
-   - **Spec Approval != Implementation Completion**: Spec status `approved` indicates verified developer agreement on business rules, NOT whether code or tests are implemented. A feature spec may legitimately be `approved` for planned or in-progress features where implementation is unimplemented (`Not yet available`) or tests are pending.
-   - **Lack of Tests Never Disproves Approval**: Lack of code, missing test suites, or open criteria `[ ]` never disproves real developer spec approval. NEVER recommend reverting an `approved` spec to `draft` solely because tests or code are incomplete. Report missing verification separately as implementation progress.
-   - **Unknown Consent is Unknown, Not Missing**: If approval provenance is unrecorded in metadata, report consent as unconfirmed/unknown awaiting verification, not as an asserted defect.
+   - An audit reports evidence and never confers developer endorsement.
+   - **Intent and Completion Are Separate**: Planned requirements remain valid when implementation/tests are unavailable or criteria remain open. Report pending verification separately.
+   - **No Administrative Metadata Required**: Feature specs omit lifecycle status, owner assignment, and review dates. Their absence is not a defect; use available decisions and Git/PR context without demanding new approval records.
    - **No Target Approval Archive Required**: Never demand an approval log, decision archive, or change trail in the target repository. The standard explicitly forbids per-change approval archives.
 5. **Preserve Semantic Uncertainty**:
    - Separate deterministic structural defects from semantic conflicts and unknown intent.
@@ -83,7 +83,7 @@ NEVER MUTATE TARGET FILES. NEVER CREATE UNREQUESTED AUDIT FILES.
 | "All links pass, so the documentation is completely valid." | Link checkers verify file paths, not business rules or standards consistency. | Inspect spec/code alignment and standards agreement before declaring a verdict. |
 | "The deadline is today, so fixing obvious errors saves time." | Rushed automated repairs bypass developer review and destroy audit fidelity. | Deliver findings immediately in conversation so the developer can prioritize. |
 | "Code differs from spec, so the spec must be outdated." | Code may contain a severe regression; spec may capture the intended contract. | Present divergence neutrally with evidence from both sources; ask for a decision. |
-| "Spec is marked `approved` but has no tests or open criteria, so it should be reverted to `draft`." | Spec approval denotes developer agreement on business rules, not implementation completion. | Keep approved status; report missing tests or open criteria separately under pending verification. |
+| "A planned spec has no tests, so its requirements must be invalid." | Intended behavior and implementation completion are separate. | Report missing implementation or verification without inventing lifecycle transitions. |
 | "No approval log or decision archive exists in the repo, so approvals are unverified defects." | The project knowledge standard explicitly forbids per-change approval archives or logs in the target repo. | Report unknown consent neutrally as unconfirmed in conversation; do not demand a repo archive. |
 | "I should leave an audit report file in the repository." | Dropping unrequested files pollutes the repo and violates repository hygiene. | Present findings in conversation; write a file only if explicitly commanded. |
 
@@ -109,15 +109,15 @@ Verifiable file and path relationships evaluated without subjective interpretati
 - **Missing standard documents**: Absence of `docs/project.md`, `docs/architecture.md`, `docs/development.md`, etc., when required by project state.
 - **Broken relative links**: Markdown links targeting non-existent files or anchors.
 - **Broken implementation/test links**: Feature spec `Implementation & Test Mapping` linking to missing files or functions.
-- **Missing spec sections**: Feature specs missing mandatory headings (`Status & Metadata`, `Business Rules`, `Acceptance Criteria`).
+- **Missing spec sections**: Feature specs missing applicable schema headings such as `Metadata`, `Business Rules`, or `Acceptance Criteria`. Administrative lifecycle fields are not required.
 
 ### 2. Observed Code & Schema Divergence (Empirical)
 Direct contradictions between documented intent and observable implementation:
 - **Spec vs Code**: Approved spec states rule $X$, but code implements behavior $Y$.
 - **Data model vs Database**: `docs/data-model.md` defines entity relationship $A \rightarrow B$, but migrations/ORM models define $A \rightarrow C$.
 - **Fabricated criteria approval**: Acceptance criteria marked checked `[x]` without executed, passing automated tests (open criteria `[ ]` are expected and valid for pending work).
-- **Unapproved rules marked approved**: Spec labeled `approved` despite developer explicitly marking rules draft or withholding approval (crucial: lack of code or tests does NOT mean unapproved; do NOT conflate unimplemented features with unapproved specs).
-- **Missing Verification vs Invalid Approval**: Missing implementation or tests for an approved spec is an implementation progress observation, NOT a spec approval defect. Report missing verification separately under implementation progress; never recommend reverting `approved` status to `draft` on that basis.
+- **Fabricated endorsement**: An observation is presented as a developer decision despite contrary evidence. Missing administrative fields or approval archives alone are not evidence of this.
+- **Pending implementation**: Missing code or tests is an implementation progress observation, separate from validity of intended requirements.
 ### 3. Semantic Uncertainty & Standards Conflicts (Interpretive)
 Contradictions between different standards or guidelines that cannot be mechanically resolved:
 - **Standards collision**: `docs/standards/ui.md` mandates shared component `<Button>`, while `docs/standards/coding.md` mandates native `<button>` elements.
@@ -163,9 +163,10 @@ An audit identifies issues; it does not fix them. Guide the developer to the app
 1. **For Spec/Code Divergence or Rule Updates**:
    - Direct to `working-with-project-specs`.
    - Used to approve spec changes, reconcile code to spec, or record authorized exceptions.
-2. **For Missing Standard Documents or Initial Scaffolding**:
-   - Direct to `documenting-existing-projects` (existing code) or `initializing-project-knowledge` (new project).
-   - Used to generate missing structure with proper developer gates and legacy choices.
+2. **For Missing Documentation**:
+   - Format-only outlines or selected-document restructuring: `structuring-project-documentation`.
+   - Grounded content from existing code: `documenting-existing-projects`; from new-project requirements: `initializing-project-knowledge`.
+   - An explicitly labelled outline is incomplete content, not a completed knowledge base. Report its missing knowledge separately from format defects; assess confirmed rules only where available.
 3. **For Code Bugs or Regressions**:
    - Route to regular development/testing workflows to repair code to meet approved specs.
 

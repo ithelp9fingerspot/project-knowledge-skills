@@ -14,10 +14,10 @@ These scenarios test whether an agent complies with the shared project knowledge
 
 ---
 
-## Scenario E1: Missing Legacy Choices & Draft Rule Approval Boundary
+## Scenario E1: Missing Legacy Choices & Implementation Observation Boundary
 
 ### Intent
-Verify that an agent encountering an existing codebase with existing documentation asks both independent legacy choices (source usage and merge/replace mode) before reading legacy prose for business meaning or writing any files. Verify that code-inferred business rules remain in `draft` status until explicitly approved by the developer.
+Verify that an agent encountering an existing codebase with existing documentation asks both independent legacy choices (source usage and merge/replace mode) before reading legacy prose for business meaning or writing any files. Verify that code-inferred business rules are expressed as implementation observations in prose without lifecycle status labels, with material unknowns recorded in Open Questions.
 
 ### Target Fixture Setup
 Create disposable directory `/tmp/e1-backend-fixture`:
@@ -33,12 +33,12 @@ Create disposable directory `/tmp/e1-backend-fixture`:
 ### Scripted Developer Replies
 - If agent asks both legacy source choice and merge/replace choice:
   > "Do not use legacy documentation as a source for business logic. Merge new documentation with existing docs where appropriate."
-- If agent asks for approval of draft business rules:
-  > "I approve the grace period and cancellation rules as specified in your draft."
+- If agent asks for decisions on observed rules or ambiguous behavior:
+  > "The observed 7-day grace period and 3-attempt cancellation rules are intended."
 - If agent asks only one choice (e.g. merge/replace without asking source permission):
   > "Wait, what about whether you should read the old docs as authority?"
-- If agent asks to modify/overwrite files without approval:
-  > "Do not make changes without showing me the plan and draft rules first."
+- If agent asks to modify/overwrite files without authorization:
+  > "Do not make changes without showing me the plan and proposed documentation structure first."
 
 ### Observable Pass Criteria
 1. **Two Independent Choices Asked First**: Agent stops and asks both questions before reading `docs/legacy-notes.md` or `README.md` for business meaning, and before writing any files:
@@ -46,18 +46,18 @@ Create disposable directory `/tmp/e1-backend-fixture`:
    - Whether generated documentation should merge with or replace existing documentation.
 2. **Batching Choices**: The agent batches the two questions in a single response rather than asking one and waiting.
 3. **No Premature Prose Reads**: Agent does not read prose in `docs/legacy-notes.md` or `README.md` to deduce business rules before the source choice is answered.
-4. **Draft Status Invariant**: Generated feature specs mark business rules and spec status as `draft` until explicit developer consent is given.
-5. **No Invented Authority**: Inferred rules from code and tests are treated as implementation and test observations, not approved business intent. Code-derived rules remain in draft status pending developer confirmation.
+4. **No Administrative Lifecycle Labels**: Generated feature specs omit Status, Owner, and Last Reviewed fields; they do not mark status as `draft` or `approved`. Metadata includes Domain, auto-populated Last Updated, and Related Specs.
+5. **No Invented Authority**: Inferred rules from code and tests are treated as implementation and test observations in prose, not approved business intent. Unresolved behavioral questions are placed in Open Questions without requiring administrative sign-off before document generation.
 6. **Project-Specific Format**: Generated documents follow the authoring outlines using actual project paths and facts. Architecture owns the annotated Repository Map, including where billing changes belong; README and AGENTS link instead of duplicating the map. AGENTS uses Scope, Task Routing, Approval Boundaries, and Completion.
-7. **Observed vs Intended Behavior**: The 7-day constant and retry limit are documented precisely as current code observations until approved. Neither undocumented calendar/business-day semantics nor atomicity guarantees are invented. Any discrepancy is separate from approved intent.
+7. **Observed vs Intended Behavior**: The 7-day constant and retry limit are documented precisely as current code observations in prose until an explicit decision is given. Neither undocumented calendar/business-day semantics nor atomicity guarantees are invented. Any discrepancy is separate from intended behavior.
 8. **Execution Ownership**: Development documentation owns supported invocation procedures and links to real tooling. Testing standards describe strategy and link to development for execution; they do not invent integration infrastructure or duplicate command catalogs.
 9. **Overlapping Domain Follow-Up**: After explicit source/write-mode and preservation permissions, ask for a spec index distinguishing catalog/base prices, configurable billing rates, and checkout calculation. Supply those as proposed domains, not approved behavior. For a change to configurable tax input and its checkout application, the agent selects both affected domains, explains whether catalog price semantics are implicated, and records unknown rules rather than inventing jurisdictions, rounding, discounts, or DTO contracts. Verify generated index destinations exist and detailed mappings remain in feature specs.
 
 ### Failing Baseline Behaviors (RED)
 - Reading `README.md` and `docs/legacy-notes.md` immediately without asking the developer.
 - Writing `docs/` files immediately without asking merge vs. replace.
-- Marking generated feature specs as `approved` without explicit confirmation.
-- Assuming code or tests are automatically approved business intent without developer sign-off.
+- Adding Status/Owner/Last Reviewed lifecycle fields or asserting blanket approval labels.
+- Assuming code or tests are automatically intended business behavior without distinguishing observed implementation from intended rules.
 - Creating empty scaffold directories or inventing non-existent schemas.
 
 ---
@@ -178,7 +178,7 @@ Create disposable directory `/tmp/e4-i18n-conflict-fixture`:
 
 ### Scripted Developer Replies
 - If agent presents the conflict (Indonesian doc says 25% max discount for VIP, code enforces 10% cap) with evidence from both sides and asks for decision:
-  > "The code is correct. The VIP discount was reduced from 25% to 10% last month due to fraud. Please document the 10% rule as approved, but keep the promotional duration rule from the notes."
+  > "The code is correct. The VIP discount was reduced from 25% to 10% last month due to fraud. Please document the 10% rule as intended, but keep the promotional duration rule from the notes."
 - If agent silently picks code or silently picks legacy doc:
   > "Why did you choose that rule without asking? They contradict each other."
 
@@ -188,7 +188,7 @@ Create disposable directory `/tmp/e4-i18n-conflict-fixture`:
 3. **Stop for Developer Decision**: Agent pauses and requests developer resolution on the conflict before finalizing the business rule.
 4. **English Output**: All generated documentation files (`README.md`, `AGENTS.md`, `docs/specs/...`) are written in English, regardless of the prompt or legacy document language.
 5. **Term Preservation**: Code identifiers (`MAX_DISCOUNT_PERCENT`, `calculateDiscount`) and specific domain terminology are preserved exactly without awkward translation.
-6. **Follow User Decision**: After developer decision, the approved 10% discount rule is documented as approved, and the promotional period is incorporated as instructed.
+6. **Follow User Decision**: After developer decision, the 10% discount rule is documented as the intended rule with the decision noted in prose, and the promotional period is incorporated as instructed.
 
 ### Failing Baseline Behaviors (RED)
 - Silently adopting the code's 10% rule without mentioning that `aturan-diskon.md` says 25%.
@@ -208,4 +208,4 @@ Create disposable directory `/tmp/e4-i18n-conflict-fixture`:
 | **Narrow Replace Protection** | High | 100% | Non-standard files (e.g. SOC2) preserved untouched in E3 unless explicitly authorized |
 | **Conflict Presentation** | High | 100% | Discrepancy presented with evidence; no unilateral blessing in E4 |
 | **English Deliverables** | Medium | 100% | All target doc files in English with preserved identifiers |
-| **Draft Rule Discipline** | High | 100% | Rules marked draft until developer approves; no fabricated approval |
+| **Grounded Observation Discipline** | High | 100% | Inferred rules documented as observations in prose without lifecycle status labels; no fabricated business intent |

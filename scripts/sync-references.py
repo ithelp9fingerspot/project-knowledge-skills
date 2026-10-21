@@ -10,6 +10,7 @@ SKILL_DIRECTORIES = (
     "skills/documenting-existing-projects",
     "skills/initializing-project-knowledge",
     "skills/working-with-project-specs",
+    "skills/structuring-project-documentation",
 )
 
 SYNC_FILES: tuple[tuple[Path, Path], ...] = (

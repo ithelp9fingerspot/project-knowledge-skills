@@ -2,19 +2,20 @@
 
 Portable, self-contained skills for AI coding agents to establish, navigate, evolve, and audit repository knowledge.
 
-The primary objective is preventing silent divergence from approved business behavior and coding standards. The skills enforce strict confirmation boundaries: discrepancies between approved specifications, observed code behavior, and requested behavior require explicit developer decisions rather than automatic resolution.
+The primary objective is preventing silent divergence from intended business behavior and coding standards. The skills enforce strict confirmation boundaries: discrepancies between documented specifications, observed code behavior, and requested behavior require explicit developer decisions rather than automatic resolution.
 
 All skill instructions and generated documentation are written in English.
 
 ---
 
-## The Four Skills and Their Triggers
+## Skills and Their Triggers
 
 | Skill Directory | Trigger / Lifecycle Phase | Key Responsibility |
 |---|---|---|
-| `documenting-existing-projects` | **Existing Codebase Onboarding**:<br>When introducing structured knowledge into an existing, already-implemented project. | Discovers code, schemas, and tests; asks independent legacy choices; drafts grounded feature specs and standards; leaves rules in `draft` status until explicitly approved. |
-| `initializing-project-knowledge` | **Greenfield Project Initiation**:<br>When establishing documentation for a new, unimplemented project from agreed requirements before code or schemas exist. | Gathers purpose, scope, stack, and draft feature requirements; avoids premature application scaffolding or fabricated schemas; records open decisions explicitly. |
-| `working-with-project-specs` | **Feature Evolution & Daily Coding**:<br>When implementing, modifying, refactoring, or extending features in a project governed by project knowledge specs. | Locates specs before code changes; halts on conflicts between requested changes and approved specs; enforces spec-first updates after explicit developer approval. |
+| `structuring-project-documentation` | **Documentation Framework**:<br>When creating format-only outlines or reorganizing selected existing docs without implementation discovery. | Uses shared recipes, bounded source reading, and create-missing defaults; preserves legacy files and distinguishes reused claims from verified knowledge. |
+| `documenting-existing-projects` | **Existing Codebase Onboarding**:<br>When introducing structured knowledge into an existing, already-implemented project. | Discovers code, schemas, and tests; asks independent legacy choices; documents grounded feature specs and standards; expresses observed code behavior in prose and records behavioral unknowns without administrative lifecycle labels. |
+| `initializing-project-knowledge` | **Greenfield Project Initiation**:<br>When establishing documentation for a new, unimplemented project from agreed requirements before code or schemas exist. | Gathers purpose, scope, stack, and feature requirements; avoids premature application scaffolding or fabricated schemas; generates documentation without administrative sign-off, recording behavioral unknowns explicitly. |
+| `working-with-project-specs` | **Feature Evolution & Daily Coding**:<br>When implementing, modifying, refactoring, or extending features in a project governed by project knowledge specs. | Locates specs before code changes; halts on conflicts between requested changes and documented specs; enforces spec-first updates after explicit developer authorization. |
 | `auditing-project-knowledge` | **Integrity & Alignment Verification**:<br>When assessing repository knowledge health, link integrity, spec-to-code alignment, and standards adherence. | Enforces strict read-only operation (zero byte mutations, zero unrequested audit artifacts); categorizes findings into structural errors, divergence, and semantic conflicts; routes fixes without automatic rewrites. |
 
 ---
@@ -32,9 +33,19 @@ When generating documentation for an existing project (`documenting-existing-pro
 
 *Note*: If explicit answers have already been provided for the current run, the agent does not ask again.
 
+For lightweight structuring, use the [bounded source-depth and write contract](shared/project-knowledge-standard.md#documentation-structuring) instead of implementation discovery. Outline-only is the default; selected-content reuse requires reading the selected passages, not the entire documentation tree.
+
 ---
 
 ## Example Invocations
+
+### Documentation Format Only or Selected-Content Reuse
+```text
+"Use structuring-project-documentation to create the standard documentation framework.
+Use only docs/legacy.md#local-setup as content for docs/development.md; keep other
+sections as filling prompts. Preserve existing files and do not inspect application code."
+```
+The result is an explicitly incomplete framework, not approved feature behavior or code/doc alignment evidence. Without a selected source, the skill can create outlines from the shared formats alone.
 
 ### 1. Documenting an Existing Project
 ```text
@@ -42,22 +53,22 @@ When generating documentation for an existing project (`documenting-existing-pro
 our project knowledge standard. Do not treat old docs as authority until I specify,
 and ask me how to handle existing documentation before writing files."
 ```
-*Expected Agent Behavior*: Scans filenames without reading prose for business rules; asks the two legacy choices in a single batched prompt; explores schemas, migrations, code, and tests; generates draft specifications with rules marked `draft`; halts for developer approval.
+*Expected Agent Behavior*: Scans filenames without reading prose for business rules; asks the two legacy choices in a single batched prompt; explores schemas, migrations, code, and tests; generates specifications with observed implementation described in prose and unknowns placed in Open Questions without administrative status labels; halts on conflicts or before coding ambiguous behavior.
 
 ### 2. Initializing a Greenfield Project
 ```text
 "Initialize project knowledge for a new appointment booking platform. Stack is Go with
-PostgreSQL; product owner is Sarah. We have not finalized the physical database schema or
-payment provider. Prepare the initial knowledge base and draft booking spec."
+PostgreSQL. We have not finalized the physical database schema or payment provider.
+Prepare the initial knowledge base and booking spec."
 ```
-*Expected Agent Behavior*: Creates `README.md`, `AGENTS.md`, `CLAUDE.md`, `docs/project.md`, `docs/architecture.md`, and initial draft specs in `docs/specs/`; sets `Implementation: Not yet available` and `Tests: Not yet available`; defers `docs/data-model.md` until storage schema is concrete; does not run framework scaffolding commands (`go mod init`, etc.).
+*Expected Agent Behavior*: Creates `README.md`, `AGENTS.md`, `CLAUDE.md`, `docs/project.md`, `docs/architecture.md`, and initial specs in `docs/specs/` with behavioral unknowns recorded in Open Questions; sets `Implementation: Not yet available` and `Tests: Not yet available`; defers `docs/data-model.md` until storage schema is concrete; does not run framework scaffolding commands (`go mod init`, etc.) or demand administrative sign-off.
 
 ### 3. Working with Project Specifications
 ```text
 "Update billing logic to allow customers without active base subscriptions to purchase
 addons directly. Update the code and tests right away."
 ```
-*Expected Agent Behavior*: Locates `docs/specs/billing/addon-purchase.md` and checks rule `BR-ADDON-001`; detects that the request conflicts with an approved rule; stops before modifying any files; presents the conflict neutrally with rule and file references; requests explicit developer approval before updating spec and implementing code.
+*Expected Agent Behavior*: Locates `docs/specs/billing/addon-purchase.md` and checks rule `BR-ADDON-001`; detects that the request conflicts with a documented rule; stops before modifying any files; presents the conflict neutrally with rule and file references; requests explicit developer authorization before updating spec and implementing code.
 
 ### 4. Auditing Project Knowledge
 ```text
@@ -75,7 +86,7 @@ Standard layout produced in target repositories:
 ```text
 README.md                     # Concise introduction and routing
 AGENTS.md                     # Shared agent instruction entrypoint and map
-CLAUDE.md                     # Thin pointer directing Claude runtimes to AGENTS.md
+CLAUDE.md                     # Single-line Claude import of AGENTS.md
 docs/
   README.md                   # Task-oriented documentation navigation
   project.md                  # Purpose, users, glossary, stack manifests
@@ -94,7 +105,7 @@ docs/
       <feature>.md            # Grounded feature specs with stable rule IDs (BR-[DOMAIN]-[001])
 ```
 
-Optional `docs/decisions/` is created only when a durable technical architectural decision warrants an Architecture Decision Record (ADR). Files are never generated as empty scaffolds.
+Optional `docs/decisions/` is created only when a durable technical architectural decision warrants an Architecture Decision Record (ADR). Content-authoring workflows create grounded documents; explicitly requested structuring creates labelled outlines instead. Keep recognized entrypoints uppercase and other documentation lowercase kebab-case. Substantial contextual guides such as `docs/standards/typescript.md` or `api.md` are created only when needed, with one content owner and task-conditioned links; their names do not cause automatic loading.
 
 ---
 
@@ -122,6 +133,9 @@ skills/
   auditing-project-knowledge/
     SKILL.md
     references/project-knowledge-standard.md
+  structuring-project-documentation/
+    SKILL.md
+    references/project-knowledge-standard.md
 ```
 
 Each `SKILL.md` accesses its bundled standard via the relative link `references/project-knowledge-standard.md`. There are no mandatory sibling links or runtime package dependencies.
@@ -129,14 +143,7 @@ Each `SKILL.md` accesses its bundled standard via the relative link `references/
 Only `skills/` contains installable packages. Root-level `shared/`, `scripts/`, `tests/`, and `docs/` hold the authoring standard, maintenance tooling, verification scenarios, and design history respectively. Keep each skill's folder name equal to its frontmatter `name`.
 
 ### Thin `CLAUDE.md` Routing
-Generated target projects employ a thin `CLAUDE.md` that directs Claude runtimes to `AGENTS.md`:
-```markdown
-# Claude Instructions
-
-Project instructions and AI guidelines are defined in [AGENTS.md](./AGENTS.md).
-Read `AGENTS.md` before planning or executing tasks in this repository.
-```
-This avoids duplicating instructions between files. Standard relative Markdown links ensure portability across tools without vendor-specific import syntax.
+Generated `CLAUDE.md` contains only the import prescribed by the [canonical entrypoint contract](shared/project-knowledge-standard.md#root-entrypoints). The [authoring recipe](shared/project-knowledge-authoring.md#claudemd) shows its complete contents. `AGENTS.md` remains the shared instruction owner. This one Claude-specific eager import differs from ordinary task-conditioned Markdown pointers; splitting a manual into eager imports does not reduce loaded context.
 
 ---
 
@@ -146,7 +153,7 @@ These skills are plain Markdown packages containing instructions and reference f
 
 ### Install with the skills CLI
 
-The [skills CLI](https://github.com/vercel-labs/skills) discovers the four packages under `skills/`. Run it through `npx` with Node.js and npm available; no npm package, plugin manifest, or registry publishing step is needed for this repository.
+The [skills CLI](https://github.com/vercel-labs/skills) discovers packages under `skills/`. Run it through `npx` with Node.js and npm available; no npm package, plugin manifest, or registry publishing step is needed for this repository.
 
 After hosting this repository on GitHub, replace `<owner>/<repo>` below with its actual repository identifier:
 
@@ -157,7 +164,7 @@ npx skills add <owner>/<repo> --list
 # Install one skill into the current project (choose the target agent interactively)
 npx skills add <owner>/<repo> --skill documenting-existing-projects
 
-# Install all four skills into the current project, targeting Claude Code
+# Install all skills into the current project, targeting Claude Code
 npx skills add <owner>/<repo> --skill '*' --agent claude-code
 ```
 
@@ -195,13 +202,13 @@ All scripts and tests use the Python 3 standard library with zero external packa
 Canonical documentation contracts live in `shared/project-knowledge-standard.md`; detailed per-file outlines and writing recipes live in `shared/project-knowledge-authoring.md`. Edit those sources only. Both files are bundled under each skill's `references/` directory so a standalone installation needs no sibling skill or source-repository access. Recipes standardize English headings and order, while contents follow the target project's evidence and decisions. `AGENTS.md` routes tasks; `docs/architecture.md#repository-map` owns project structure; development owns invocation procedures.
 
 ### 1. Synchronizing Packaged References
-To propagate edits from both canonical references in `shared/` to all four skill packages:
+To propagate edits from both canonical references in `shared/` to every skill package:
 ```bash
 python3 scripts/sync-references.py
 ```
 
 ### 2. Checking Reference Parity
-To verify that all eight packaged references match their canonical sources without modifying files (exits `0` on parity, `1` on drift or missing source):
+To verify that all packaged references match their canonical sources without modifying files (exits `0` on parity, `1` on drift or missing source):
 ```bash
 python3 scripts/sync-references.py --check
 ```
@@ -217,10 +224,11 @@ python3 -m unittest discover -s tests -v
 ## Behavioral Scenario Execution
 
 Behavioral scenarios and evaluation rubrics live in `tests/scenarios/`:
+- `tests/scenarios/structuring-project-documentation.md`: Scenarios S1–S3 (format-only, selected legacy reuse, existing-file collision and preservation).
 - `tests/scenarios/documenting-existing-projects.md`: Scenarios E1–E4 (legacy choices, no-source merge, narrow replace, non-English docs).
 - `tests/scenarios/initializing-project-knowledge.md`: Scenarios N1–N3 (empty project decisions, UI initialization, in-scope vs future roadmap scope).
-- `tests/scenarios/working-with-project-specs.md`: Scenarios W1–W3 (spec/code divergence, scope expansion stop, draft spec creation).
-- `tests/scenarios/auditing-project-knowledge.md`: Scenarios A1–A3 (read-only invariant, semantic conflicts, unimplemented approved specs).
+- `tests/scenarios/working-with-project-specs.md`: Scenarios W1–W3 (spec/code divergence, scope expansion stop, new feature spec creation).
+- `tests/scenarios/auditing-project-knowledge.md`: Scenarios A1–A3 (read-only invariant, semantic conflicts, unimplemented planned specs without lifecycle metadata).
 - `tests/scenarios/standalone-installation.md`: Scenarios P1–P2 (standalone skill portability, thin CLAUDE routing and conflict stop).
 
 ### Execution Protocol
@@ -237,7 +245,7 @@ Behavioral scenarios and evaluation rubrics live in `tests/scenarios/`:
 The principles guiding this repository's design draw upon established engineering practices for AI coding agents and team knowledge systems:
 
 1. **Google Software Engineering at Google (Chapter 10: Documentation)**:
-   - Emphasizes team-approved design templates, clear documentation ownership, peer review boundaries, and freshness maintenance.
+   - Emphasizes clear document boundaries, peer review in change history, and traceable documentation maintenance.
    - Reference: https://abseil.io/resources/swe-book/html/ch10.html
 2. **OpenAI Harness Engineering**:
    - Describes concise `AGENTS.md` entrypoints as maps rather than exhaustive manuals, organizing structured repository knowledge for autonomous coding agents.
@@ -250,4 +258,4 @@ The principles guiding this repository's design draw upon established engineerin
    - Reference: https://engineering.atspotify.com/2026/6/code-with-claude-coding-is-no-longer-the-constraint
 
 ### Limits of Research Application
-These references provide foundational principles for concise instruction routing, structured context, and human approval boundaries. However, they do not prescribe the exact file naming conventions, four-skill decomposition, per-feature ERD requirement, or standalone packaging structure implemented here. Those choices represent specific design adaptations tailored to predictable, bounded agent operation.
+These references provide foundational principles for concise instruction routing, structured context, and human approval boundaries. They do not prescribe the exact naming conventions, skill decomposition, per-feature ERD requirement, or standalone packaging structure implemented here. Those choices are project-specific design adaptations.

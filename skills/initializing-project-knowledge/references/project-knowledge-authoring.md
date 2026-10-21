@@ -6,7 +6,7 @@ Use the recipe for each document being written or audited. The [Project Knowledg
 
 Use the exact English headings and relative order under **Outline and Writing Instructions**; use the project's own title and content. Additional project-specific subsections belong under the relevant standard heading. Recipe labels are authoring instructions, not headings to copy into output.
 
-`Include when: <condition>` marks conditional sections in plain prose outside the output heading. Other listed sections are required when their document is created. Omit irrelevant conditional sections; for a required but unresolved subject, name the specific unknown and decision needed. A concrete unknown is not an invitation to create empty scaffolds. Create a document only when evidence or explicit decisions support useful content. The standard's feature-spec non-applicability rules remain authoritative.
+`Include when: <condition>` marks conditional sections in plain prose outside the output heading. Other listed sections are required when their document is created. Omit irrelevant conditional sections; for a required but unresolved subject, name the specific unknown and decision needed. Content authoring requires useful evidence or explicit decisions; requested outlines follow the standard's [Documentation Structuring](project-knowledge-standard.md#documentation-structuring) contract and retain these same headings.
 
 Select applicable sections before drafting. A conditional section whose predicate is false is absent, not a heading followed by “none yet”; put a relevant unresolved decision in the nearest required section. A planned application alone does not establish runtime processes, environment variables, invocation syntax, or troubleshooting knowledge. During audit, first determine applicability from evidence, then assess heading presence.
 
@@ -45,7 +45,7 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 
 **Outline and Writing Instructions:**
 1. `## Scope`: Define the instruction scope and minimum context needed to recognize the project. State any actual narrower instruction scopes without creating a mandatory nested-instruction tree.
-2. `## Task Routing`: Pair each task condition with a relative destination, using section anchors when useful. Cover module placement, implementation, test authoring, execution, and business behavior when applicable. Add UI and persistence routes only for relevant projects. Read all applicable routes; a single-spec limit is not a general rule.
+2. `## Task Routing`: Pair each distinct task branch with a relative destination and useful section anchor. Front-load its condition: TypeScript changes reach a contextual language guide when present; test authoring reaches testing standards; execution reaches development; business changes reach all affected specs. Read all applicable routes. Use ordinary links for on-demand guidance; reserve eager import for the CLAUDE entrypoint.
 3. `## Approval Boundaries`: State actionable stop conditions and the decision needed, linking to the project's workflow for detail. A conflict between approved spec and observed behavior requires a developer decision, not unilateral selection of a winner.
 4. `## Completion`: Identify required observed verification, affected documentation reconciliation, and remaining-decision reporting. Link to procedures instead of copying command catalogs.
 
@@ -73,19 +73,15 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 
 **Evidence:** An existing root AGENTS file.
 
-**Outline and Writing Instructions:** Use a project-specific title and one short instruction to read and follow `[AGENTS.md](./AGENTS.md)`. No additional sections or runtime-specific include syntax.
+**Outline and Writing Instructions:** The complete file is one import line:
 
-**Content Boundaries:** AGENTS owns all rules. Always create this entrypoint when generating the standard knowledge structure.
-
-**Example:** Illustrative complete file, replacing the title with the project's own name:
-
-```markdown
-# Example Project Agent Instructions
-
-Read and follow [AGENTS.md](./AGENTS.md) before working in this repository.
+```text
+@AGENTS.md
 ```
 
-**Done When:** The relative link reaches AGENTS and every instruction is owned there rather than duplicated here.
+**Content Boundaries:** Use the exact entrypoint contract in the standard. AGENTS owns all rules; preserve any existing unique CLAUDE instructions by an authorized move before replacing the file.
+
+**Done When:** The file matches the standard's one-line contract and adjacent AGENTS exists. Import resolution is structural evidence; actual runtime loading is verified only when exercised in Claude Code.
 
 ## docs/README.md
 
@@ -227,6 +223,8 @@ Place a relevant absence or pending decision briefly under a required section. A
 
 **Content Boundaries:** Reference config rather than transcribing formatter settings. Keep business requirements in specs, dependency policy in architecture, and test methodology in testing standards. Prefer links to maintained implementation over large copied boilerplate.
 
+Context-specific companion guides use the standard's lowercase naming convention and this same convention recipe, limited to their topic. When a language/API branch earns a separate file, move its rules there and replace the former content with a task-conditioned link. This keeps one owner rather than a general guide plus duplicate language rules.
+
 **Example:** Illustrative rule shape: `For provider failures, follow the existing error translation in <actual implementation link>; retain the provider code for diagnosis.` The target and rule require project evidence.
 
 **Done When:** Each asserted convention has evidence or explicit approval, examples exist or their absence is stated, proposals are labelled, and framework-specific advice is limited to this project's actual stack.
@@ -284,7 +282,7 @@ Place a relevant absence or pending decision briefly under a required section. A
 1. `## When to Use`: Define behavior-changing triggers and distinguish behavior-preserving maintenance.
 2. `## Discovery and Conflicts`: Input: affected request/spec/code/tests. Action: gather permitted evidence and present conflicting sources, impact, open questions, and the required decision. Done: affected scope and unresolved conflicts are explicit.
 3. `## Drafting`: Input: evidence and decisions. Action: revise affected rules/flows/criteria in draft form using the local format. Done: every in-scope behavioral uncertainty is recorded, and unaffected behavior remains unchanged.
-4. `## Approval`: Input: complete draft and material questions. Action: request explicit contextual developer consent. Done: all in-scope rules/flows/criteria are covered by consent; excluded future topics do not block it.
+4. `## Approval`: Input: conflicting or unresolved affected behavior. Action: obtain the specific developer decision before implementing it; use explicit decisions already supplied. Done: affected behavior is settled. Documentation generation proceeds with known facts and explicit questions, without a separate administrative sign-off.
 5. `## Implementation`: Input: approved behavior and authorized scope. Action: implement only that scope and reconcile real code/test mappings. Done: implementation and affected documentation agree or remaining gaps are reported.
 6. `## Verification`: Input: observable acceptance criteria. Action: run supported checks and report actual outcomes. Done: evidence supports the result; unexecuted criteria are not marked as passed.
 
@@ -305,7 +303,7 @@ Place a relevant absence or pending decision briefly under a required section. A
 **Outline and Writing Instructions:**
 1. `## Selecting Specifications`: Explain discriminating task conditions and how to combine overlapping domains. Do not impose a universal one-spec-only rule.
 2. `## Domain and Feature Index`: Use a task-oriented table of domain/feature, scope or trigger, and spec link. Add key model/code mapping only where it improves selection and can be maintained; detailed mappings remain in each spec.
-3. `## Format and Lifecycle`: Explain the required feature format in project-local terms, including status semantics and links to the project's spec-change workflow. Transfer the standard's necessary schema guidance here without a dependency on the skill repository.
+3. `## Format and Lifecycle`: Explain the local feature format, evidence distinctions, and behavioral change boundaries, linking to the spec-change workflow. Transfer necessary schema guidance into the project; use Git/PR history rather than lifecycle fields or manual review tracking.
 
 Proposed domains without feature documents are labelled `Not yet specified` without invented links or empty spec files. A domain name alone does not establish tax inclusion, rounding, regional rules, or unaffected behavior. When impact cannot be established, route to the known affected domains and name the specific remaining scope question; “catalog” does not by itself prove prices are pre-tax or unchanged.
 
@@ -323,7 +321,7 @@ Proposed domains without feature documents are labelled `Not yet specified` with
 
 **Evidence:** Apply the standard's evidence hierarchy and approval gates. Distinguish approved intent, current code behavior, test expectations, and physical schema constraints.
 
-**Outline and Writing Instructions:** Follow the authoritative [Feature Spec Format](project-knowledge-standard.md#feature-spec-format), including its headings, order, metadata, and non-applicability instructions. Build scope and glossary before stable numbered rules; trace rules through data access, failure consistency, acceptance criteria, and actual implementation/test mappings. Status describes approval, not completion. Keep material in-scope questions explicit; do not block approval on excluded future topics.
+**Outline and Writing Instructions:** Follow the authoritative [Feature Spec Format](project-knowledge-standard.md#feature-spec-format), including headings, order, automatic metadata, and non-applicability instructions. Build scope and glossary before stable numbered rules; trace rules through data access, failure consistency, acceptance criteria, and actual implementation/test mappings. Generate known content immediately, recording unresolved in-scope behavior under Open Questions instead of requesting administrative approval.
 
 **Content Boundaries:** Shared entity relationships must agree with data-model; technical conventions link to standards. Record relevant current implementation gaps separately within Implementation & Test Mapping, with sources, rather than rewriting approved behavior to match a bug. Project-specific subsections may clarify existing sections without replacing the schema.
 

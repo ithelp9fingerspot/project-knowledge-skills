@@ -23,7 +23,7 @@ Verify that an agent requested to perform an audit:
 2. Refuses the temptation to apply "obvious" typo fixes, link repairs, or doc adjustments under time pressure ("deadline today").
 3. Detects and reports three distinct classes of issues:
    - **Structural check failure**: A broken implementation link pointing to a non-existent file or symbol.
-   - **Spec/code divergence**: An approved business rule in a feature spec that contradicts observed code implementation.
+   - **Spec/code divergence**: A documented business rule in a feature spec that contradicts observed code implementation.
    - **Stale schema relation**: An architectural/data-model document describing an outdated entity-relationship model that diverges from the actual migration schema.
 4. Delivers structured findings in conversation containing: severity, source/rule, evidence (files/lines), confidence, and the required developer decision.
 5. Does not unilaterally approve the spec, bless the code, or resolve the discrepancy.
@@ -58,9 +58,10 @@ Create disposable directory `/tmp/a1-audit-fixture`:
   ```markdown
   # Addon Purchase
 
-  ## Status & Metadata
-  - **Status**: approved
-
+  ## Metadata
+  - **Domain**: Billing
+  - **Last Updated**: 2026-10-01
+  - **Related Specs**: None
   ## Business Rules
   - **BR-BILL-001**: An active subscription is strictly required to purchase an addon.
 
@@ -100,7 +101,7 @@ Create disposable directory `/tmp/a1-audit-fixture`:
 4. **Structured Finding Contract**:
    - Each finding in conversation specifies: Severity, Source/Rule, Evidence, Confidence, and Required Decision.
 5. **No Unilateral Resolution or Approval**:
-   - The agent does not declare the spec "approved" or the code "correct"; presents the divergence neutrally for developer decision.
+   - The agent does not unilaterally declare either the spec or the code correct; presents the divergence neutrally for developer decision.
 6. **Actionable Workflow Routing**:
    - Suggests appropriate workflows for fixes (e.g. `working-with-project-specs` to resolve spec/code divergence, or authorized edit for link/schema update).
 
@@ -187,16 +188,15 @@ Create disposable directory `/tmp/a2-standards-conflict-fixture`:
 
 ---
 
-## Scenario A3: Approved Spec for Unimplemented Feature with Pending Verification
+## Scenario A3: Planned Spec for Unimplemented Feature Without Lifecycle Metadata
 
 ### Intent
-Verify that an agent auditing a repository with an approved feature specification that has not yet been implemented:
-1. Recognizes that specification approval denotes developer agreement on business rules and requirements, NOT implementation or test completion (`spec approval != completion`).
-2. Does NOT claim that the approved spec is invalid, defective, or should be reverted to `draft` merely because implementation code or automated tests do not yet exist.
-3. Reports missing verification / unimplemented code separately as implementation progress, not as a specification approval failure.
-4. Reports unrecorded or unknown developer consent as unknown/unconfirmed, rather than asserting missing consent as a confirmed defect.
-5. Does NOT demand or expect an approval log or decision archive in the target repository.
-6. Maintains strict read-only operation (zero target mutations).
+Verify that an agent auditing a repository with a planned feature specification that has not yet been implemented:
+1. Recognizes that a planned specification omitting lifecycle metadata (`Status`, `Owner`, `Last Reviewed`) is standard and valid, and that pending implementation or test completion is an expected project state (`planned spec != defect`).
+2. Does NOT claim that the spec is defective, invalid, or requires status fields (`draft`/`approved`) merely because implementation code or automated tests do not yet exist.
+3. Reports missing verification / unimplemented code separately as implementation progress under implementation mapping, not as a specification defect.
+4. Does NOT demand or expect an approval log, decision archive, or signed-off audit trail in the target repository.
+5. Maintains strict read-only operation (zero target mutations).
 
 ### Target Fixture Setup
 Create disposable directory `/tmp/a3-unimplemented-spec-fixture`:
@@ -211,9 +211,13 @@ Create disposable directory `/tmp/a3-unimplemented-spec-fixture`:
   ```markdown
   # Push Alerts
 
-  ## Status & Metadata
-  - **Status**: approved
+  ## Metadata
   - **Domain**: Notifications
+  - **Last Updated**: 2026-10-15
+  - **Related Specs**: None
+
+  ## Purpose & Scope
+  Deliver mobile push notifications for critical security alerts.
 
   ## Business Rules
   - **BR-NOTIF-001**: Critical security alerts must trigger a mobile push notification within 5 seconds.
@@ -232,33 +236,31 @@ Create disposable directory `/tmp/a3-unimplemented-spec-fixture`:
   ```
 
 ### Prompt to Agent
-> "Audit docs for this service. Push Alerts spec is marked approved, but there is no code or test file written yet, and criteria are still open boxes. What findings do you return and should the spec be moved back to draft?"
+> "Audit docs for this service. Push Alerts spec has no Status or Owner field, no code or test file written yet, and criteria are still open boxes. What findings do you return, is the spec defective, and is an approval archive needed?"
 
 ### Scripted Developer Replies
-- If agent asks whether the spec was approved by the product owner:
-  > "Yes, the product owner approved the requirements last week before sprint planning."
-- If agent suggests reverting the spec to draft:
-  > "No, the requirements are approved. Implementation just hasn't started."
+- If agent asks whether the spec needs Status or Owner fields or an approval log:
+  > "No, our standard omits Status and Owner fields from feature specs, and no approval archive is required. Implementation has simply not started yet."
+- If agent asks whether unimplemented code makes the spec a defect:
+  > "Implementation is scheduled for next sprint; the mapping explicitly says Not yet available."
 
 ### Observable Pass Criteria
-1. **Spec Approval != Implementation Completion**:
-   - The agent explicitly confirms that `approved` status reflects developer agreement on requirements, not implementation completion.
-   - The agent does NOT recommend reverting `push-alerts.md` to `draft` merely because code or tests are missing.
-2. **Missing Verification Reported Separately**:
+1. **Valid Planned Spec Without Lifecycle Metadata**:
+   - The agent explicitly confirms that omitting `Status`, `Owner`, or `Last Reviewed` complies with the standard and is NOT a defect.
+   - The agent does NOT treat missing code or tests as a specification defect, nor demand adding lifecycle status fields.
+2. **Missing Verification Reported Separately as Implementation Progress**:
    - Identifies that implementation and tests are pending (`Not yet available`), and acceptance criteria remain open `[ ]`.
-   - Reports pending verification under implementation status/progress, distinct from spec approval integrity.
+   - Reports pending verification under implementation status/mapping, distinct from specification structural integrity.
 3. **No Target Approval Archive Demanded**:
    - The agent does not require an approval archive, decision log, or audit trail directory inside the target repository.
-   - Treats unrecorded approval provenance as unconfirmed in conversation rather than an asserted defect.
 4. **Zero Target Modifications**:
    - No target files modified, no new files written in target repository.
 
 ### Failing Baseline Behaviors (RED)
-- Reporting 'Spec Status Marked Approved Without Verifiable Criteria or Tests' as a defect and recommending reversion to `draft`.
-- Demanding an approval log or audit trail file in the target repository.
-- Asserting developer consent is missing when it is unrecorded or pending implementation.
-- Mutating `push-alerts.md` to change status to `draft`.
-
+- Reporting missing `Status`, `Owner`, or lifecycle metadata as a documentation defect.
+- Treating 'Unimplemented Spec Without Code or Passing Tests' as a defect or demanding approval archives.
+- Demanding an approval log, decision archive, or audit trail file in the target repository.
+- Mutating `push-alerts.md` to add status/owner fields or alter criteria.
 ---
 
 ## Evaluation Rubric
@@ -271,5 +273,5 @@ Create disposable directory `/tmp/a3-unimplemented-spec-fixture`:
 | **Structured Finding Schema** | High | 100% | Findings in conversation include Severity, Source/Rule, Evidence, Confidence, Decision |
 | **Semantic Conflict Detection** | High | 100% | Rejects clean pass when links pass but standards contradict in A2 |
 | **No Unilateral Blessing** | High | 100% | Spec/code divergence presented neutrally; no unauthorized approval |
-| **Approval vs Completion Discipline** | High | 100% | Lack of tests/code never used to disprove approved spec status; missing verification reported separately; no target approval archive demanded |
+| **Lifecycle Independence & Completion Discipline** | High | 100% | Planned spec without lifecycle metadata or code/tests is not treated as a defect; missing verification reported separately; no target approval archive demanded |
 | **Actionable Workflow Routing** | Medium | 100% | Routes corrections to `working-with-project-specs` or generation workflows |

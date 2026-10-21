@@ -15,6 +15,7 @@ Establishes standardized repository documentation (`AGENTS.md`, `CLAUDE.md`, and
 - Setting up agent navigation rules (`AGENTS.md`, `CLAUDE.md`) in an empty or fresh repository.
 
 ## When NOT to Use
+- Format-only outlines or selected-doc restructuring without requirements discovery (use `structuring-project-documentation`, even in an empty repository).
 - Documenting an existing codebase that already contains code or schemas (use `documenting-existing-projects`).
 - Modifying specifications for ongoing feature work or bugfixes (use `working-with-project-specs`).
 - Verifying existing documentation against implementation in a read-only pass (use `auditing-project-knowledge`).
@@ -47,7 +48,6 @@ Before creating files, inspect the target repository root:
 - Under rush pressure ("deadline today", "guess and hurry", "mark approved so coding can begin"), **refuse to fabricate decisions**.
 - If persistence or storage engine is undecided, **do NOT invent database tables, columns, UUIDs, foreign keys, or schemas**. Record persistence as an open architectural decision.
 - If the tech stack is undecided (e.g. "React or Flutter"), record both as candidate options in `docs/project.md` or `docs/architecture.md`; do NOT arbitrarily pick one as a "provisional default" or write stack-specific standards.
-- If the product owner or approver is unassigned, record as unassigned; do NOT assume or fabricate approval.
 
 ### 3. Conditional File Discipline
 Only create documents supported by explicit developer decisions:
@@ -75,51 +75,25 @@ Because the project is not yet implemented, feature specifications must state:
 ```
 **NEVER** invent hypothetical file paths (e.g. `src/domain/types.ts`, `src/features/...`) before they exist in the codebase.
 
-### 6. Specification Approval Boundary
-- All initial feature specifications must be marked `Status: draft`.
-- Acceptance criteria are open conditions (`- [ ]`). **NEVER** mark them checked `[x]` without observed test execution.
-- List all open decisions and dependencies under `## Open Questions`. Material open behavioral questions within scope prevent approved status. Excluded future topics or out-of-scope backlog items do not prevent approval.
-- Specifications become `approved` **ONLY** with explicit developer sign-off.
+### 6. Specification Evidence Boundary
+- Generate requested specifications from supplied requirements and known decisions without administrative sign-off or owner assignment.
+- Acceptance criteria remain open conditions (`- [ ]`); report actual execution separately.
+- Record unresolved behavior under `## Open Questions`. Resolve material affected questions before implementation; generation of known content proceeds independently.
 
 ### 7. Language and Portability Invariants
 - All generated documentation files (`README.md`, `AGENTS.md`, `CLAUDE.md`, `docs/**/*.md`) must be written in **English**.
 - Conversational interaction follows the user's preferred language.
 - Code identifiers, domain terms, and token names must be preserved verbatim.
-- `CLAUDE.md` must be a minimal relative link to `AGENTS.md` (`[AGENTS.md](./AGENTS.md)`).
+- Apply the exact [CLAUDE entrypoint recipe](references/project-knowledge-authoring.md#claudemd).
 
 ---
 
 ## Execution Workflow
 
-```dot
-digraph init_workflow {
-    rankdir=TB;
-    start [label="Inspect workspace", shape=box];
-    has_legacy [label="Existing code/docs present?", shape=diamond];
-    legacy_gate [label="Ask two legacy choices\n(source usage & merge/replace)", shape=box, style=filled, fillcolor="#ffcccc"];
-    gather [label="Gather requirements, stack,\nstorage, & UI decisions", shape=box];
-    missing_decisions [label="Decisions missing/undecided?", shape=diamond];
-    record_open [label="Record as open questions;\nomit unsupported conditional files", shape=box];
-    author [label="Author grounded docs & draft specs\n(Implementation: Not yet available)", shape=box];
-    disclose [label="Disclose planned files & consent boundaries", shape=box];
-    approval [label="Developer approval received?", shape=diamond];
-    finalize [label="Mark approved specs; retain drafts for rest", shape=box, style=filled, fillcolor="#ccffcc"];
-    keep_draft [label="Keep specs marked draft;\npreserve open questions", shape=box];
-
-    start -> has_legacy;
-    has_legacy -> legacy_gate [label="yes"];
-    has_legacy -> gather [label="no"];
-    legacy_gate -> gather;
-    gather -> missing_decisions;
-    missing_decisions -> record_open [label="yes"];
-    missing_decisions -> author [label="no"];
-    record_open -> author;
-    author -> disclose;
-    disclose -> approval;
-    approval -> finalize [label="yes"];
-    approval -> keep_draft [label="no / pending"];
-}
-```
+1. Inspect the workspace and apply missing source/write permissions when existing material is involved.
+2. Gather supplied requirements and inspect permitted evidence; record unresolved decisions instead of inventing them.
+3. Select supported documents and generate them directly using the shared format.
+4. Verify links, evidence distinctions, and conditional omissions; report remaining behavioral questions. Generation ends with actual files, not an administrative approval request.
 
 ### Phase 1: Requirement Gathering & Decision Inventory
 1. Capture the business purpose, core user problems, and target audience.
@@ -127,7 +101,6 @@ digraph init_workflow {
    - **Tech Stack**: Confirmed language/framework or candidate options?
    - **Persistent Storage**: Confirmed database engine or undecided?
    - **UI Foundation**: Reusable components, design tokens, styling rules agreed?
-   - **Ownership & Approvers**: Assigned or unassigned?
 3. If critical decisions are undecided, do not guess; capture them as open questions.
 
 ### Phase 2: Document Scope Determination
@@ -148,26 +121,22 @@ Determine the minimal, grounded set of documentation files to produce:
 ### Phase 3: Authoring Grounded Knowledge
 1. Author all documents in **English** adhering to the [Project Knowledge Standard](references/project-knowledge-standard.md). Before writing each file, read its recipe in the [Authoring Guide](references/project-knowledge-authoring.md); use the prescribed headings/order with this project's facts and applicable sections only. Read [AGENTS guidance](references/project-knowledge-authoring.md#agentsmd) for conditional routing and [architecture guidance](references/project-knowledge-authoring.md#docsarchitecturemd) for the canonical Repository Map, without inventing implemented structure.
 2. For any feature specification:
-   - State `Status: draft`.
+   - Fill only the metadata prescribed by the shared format automatically.
    - Provide domain glossary and numbered business rules (`BR-<DOMAIN>-<NUM>`).
    - Leave acceptance criteria as open checkboxes (`- [ ]`).
    - State `Implementation: Not yet available` and `Tests: Not yet available`.
    - List unresolved items under `## Open Questions`.
 3. In `docs/architecture.md`, document known structural boundaries and explicitly list open technology/storage selections.
 
-### Phase 4: Scope Disclosure & Consent Gate
-Present the proposed documentation files and consent boundaries to the developer in conversation:
-1. **Confirmed Standards**: Present technical standards (e.g. shared Button API, design tokens) derived from agreed rules.
-2. **Draft Specifications**: Present initial feature specifications and architectural options.
-3. **Open Decisions**: Explicitly enumerate what requires consent (e.g. persistent storage engine, business flows, approver sign-off).
-4. Request developer review and approval. Do not mark specifications `approved` until explicit consent is given.
+### Phase 4: Generation Report
+Report files created, confirmed requirements, inferred or unresolved subjects, and any blocked destructive updates. Use existing source/write authorization; ask only for missing permissions or specific behavioral decisions. A generated document does not authorize code implementation or claim developer endorsement.
 
 ### Phase 5: Verification
 Before completing initialization, verify:
 1. **No Scaffolding or Code**: Confirm no application generator CLI commands were run and no source code was written.
 2. **Link Integrity**: All relative links resolve to existing files.
-3. **Reading Route**: `CLAUDE.md` links to `AGENTS.md`, and `AGENTS.md` routes to `docs/`.
-4. **Draft Status**: All unapproved feature specifications remain marked `draft`.
+3. **Reading Route**: `CLAUDE.md` matches its exact import recipe, adjacent `AGENTS.md` exists, and its applicable task routes reach actual project documents.
+4. **Evidence Boundaries**: Known requirements and unresolved questions are explicit; metadata is automatic and administrative lifecycle fields are absent.
 5. **No Empty Scaffolds**: Confirm no blank or placeholder files were created.
 6. **English Deliverables**: All documentation files are written in English.
 
@@ -184,7 +153,7 @@ Before completing initialization, verify:
 | "The agreed Button and tokens can be implemented right away during initialization." | Knowledge initialization never writes application code or components. | Document the Button and tokens in `docs/standards/ui.md`. Implement components during feature coding. |
 | "I should generate a blank `docs/data-model.md` so the documentation structure is complete." | Generating empty files creates noise and violates the standard. | Create conditional files only when supported by confirmed decisions; never generate blank scaffolds. |
 | "The user asked in another language, so I should generate the documentation in that language." | Project documentation must be universally portable across agents and tools in English. | Conversational replies follow the user's language, but repository documentation is strictly English. |
-| "I can mark the spec approved because the user asked me to start coding." | Implementation requests or rush deadlines do not constitute specification approval. | Keep status `draft` until explicit developer consent is given for the specific business rules. |
+| "The user asked to start coding, so missing behavior is settled." | An implementation request does not answer unresolved business questions. | Generate known requirements and ask only for decisions needed before the affected implementation. |
 | "The project agreed on a shared Button and responsive layout, so I should set 768px breakpoint and default ButtonProps as mandatory standards." | Approved high-level scope or responsive shape does not authorize invented implementation defaults. | Label unselected breakpoints, token values, and prop defaults as proposals/unknowns until explicitly confirmed. |
 
 ## Red Flags - STOP and Clarify
@@ -192,7 +161,7 @@ Before completing initialization, verify:
 - Writing application source code, mock repositories, or UI components.
 - Generating `docs/data-model.md` or physical tables when storage is undecided.
 - Inventing source file paths (`src/...`) in feature specs before files exist in the repository.
-- Marking specifications `approved` without explicit developer confirmation.
+- Presenting an unresolved implementation observation as developer-endorsed behavior.
 - Conflating reusable UI component standards with feature-specific business flows.
 - Demanding screen mockups or visual designs before establishing UI standards.
 - Creating empty or blank scaffold files.

@@ -14,6 +14,7 @@ SKILL_DIRECTORIES = (
     "skills/documenting-existing-projects",
     "skills/initializing-project-knowledge",
     "skills/working-with-project-specs",
+    "skills/structuring-project-documentation",
 )
 SYNC_FILES = (
     (Path("shared/project-knowledge-standard.md"), Path("references/project-knowledge-standard.md")),
@@ -47,7 +48,7 @@ class TestSyncReferences(unittest.TestCase):
         """Helper to create a temporary repository tree.
 
         destinations_content maps skill name -> content string (or None to omit file).
-        If destinations_content is None, all 4 destinations match canonical_content.
+        If destinations_content is None, every destination matches canonical_content.
         """
         canonical_file = base_dir / SYNC_FILES[0][0]
         canonical_file.parent.mkdir(parents=True, exist_ok=True)
@@ -69,11 +70,11 @@ class TestSyncReferences(unittest.TestCase):
             canonical_text = "# Canonical v1\n"
             drifted_text = "# Drifted v0\n"
 
-            # 2 skills drifted, 1 missing, 1 identical
+            # Two skills drifted, one missing, all others identical.
             destinations = {
+                **{skill: canonical_text for skill in SKILL_DIRECTORIES},
                 SKILL_DIRECTORIES[0]: drifted_text,
                 SKILL_DIRECTORIES[1]: drifted_text,
-                SKILL_DIRECTORIES[2]: canonical_text,
                 SKILL_DIRECTORIES[3]: None,  # Missing
             }
             self._create_repo_structure(
@@ -118,7 +119,7 @@ class TestSyncReferences(unittest.TestCase):
             repo_dir = Path(td)
             canonical_text = "# Authoritative Standard Content\n"
 
-            # 2 drifted, 2 missing
+            # Every destination needs repair.
             destinations = {
                 SKILL_DIRECTORIES[0]: "# Old content\n",
                 SKILL_DIRECTORIES[1]: "# Drift content\n",
@@ -134,8 +135,7 @@ class TestSyncReferences(unittest.TestCase):
             expected_paths = {
                 repo_dir / s / SYNC_FILES[0][1] for s in SKILL_DIRECTORIES
             }
-            # The returned list represents the paths that were missing/different and repaired
-            self.assertEqual(len(drifted_repaired), 4)
+            self.assertEqual(len(drifted_repaired), len(expected_paths))
             self.assertEqual(set(drifted_repaired), expected_paths)
 
             # Verify every destination now matches canonical exactly
@@ -278,6 +278,7 @@ class TestSyncReferences(unittest.TestCase):
 
             # Create drifted destination
             destinations = {
+                **{skill: canonical_text for skill in SKILL_DIRECTORIES},
                 SKILL_DIRECTORIES[0]: "# Drifted\n",
                 SKILL_DIRECTORIES[1]: canonical_text,
                 SKILL_DIRECTORIES[2]: canonical_text,

@@ -18,6 +18,7 @@ Guides implementation, bugfixes, and refactoring by locating affected specificat
 
 ## When NOT to Use
 
+- Scaffolding documentation formats or reorganizing selected docs without behavior changes (use `structuring-project-documentation`).
 - Initializing documentation for an empty or un-implemented project (use `initializing-project-knowledge`).
 - Reverse-engineering and establishing documentation for an existing project from scratch (use `documenting-existing-projects`).
 - Performing a read-only audit of documentation integrity and code compliance without modifying code or specs (use `auditing-project-knowledge`).
@@ -107,7 +108,7 @@ Once the developer gives explicit consent for a specification change:
 ### 1. Mutation Order: Spec-First
 Always update the specification file **FIRST**, before writing implementation code or modifying tests:
 ```text
-Step 1: Edit docs/specs/<domain>/<feature>.md -> Commit or stage spec changes.
+Step 1: Edit docs/specs/<domain>/<feature>.md for the authorized behavior change.
 Step 2: Implement code and automated tests following host practices.
 Step 3: Run test suite to verify acceptance criteria.
 ```
@@ -135,7 +136,6 @@ When requested to build a new feature or behavior where no specification exists:
 - **Do NOT Skip Straight to Code**: Do not assume business rules from copyable code patterns or vague user phrases like "you know the flow."
 - Read the [feature-spec recipe](references/project-knowledge-authoring.md#feature-specifications) and authoritative schema before drafting; use project evidence and explicit unknowns, not generic business rules.
 - **Author a Durable Draft Spec**: Create `docs/specs/<domain>/<feature>.md` immediately with:
-  - `Status: draft`
   - Purpose & Scope
   - Domain Glossary
   - Numbered Business Rules (`BR-[DOMAIN]-[001]`)
@@ -143,13 +143,12 @@ When requested to build a new feature or behavior where no specification exists:
   - Acceptance Criteria (`- [ ]`)
   - Implementation & Test Mapping: `Not yet available.`
   - Open Questions: Material business questions requiring developer answers.
-- **Placement**: Write directly into `docs/specs/<domain>/<feature>.md` (marked `draft`). Never create proposal folders (`docs/proposals/` or `changes/`).
-- **Stop for Approval**: Present the draft spec and resolve open questions with the developer before implementing code.
+- **Placement**: Write directly into `docs/specs/<domain>/<feature>.md` using the shared metadata format. Never create proposal folders (`docs/proposals/` or `changes/`).
+- **Behavioral Decisions**: Generate the specification without administrative sign-off. Resolve material open questions before implementing affected code; use explicit requirements already supplied.
 
 ### Case B: Behavior-Preserving Refactor
 When refactoring code without changing observable business logic (e.g. extracting helper functions, optimizing database queries, improving readability):
 - **Preserve Spec Semantics**: Do NOT rewrite or alter business rules, flows, or acceptance criteria in `docs/specs/`.
-- **No Fake Review Dates**: Do NOT refresh the `Last Updated` date on approved specifications. That date records business specification review, not internal code refactoring.
 - **Mapping Updates Only**: Update `Implementation & Test Mapping` only if primary file paths or exported entrypoints were relocated or renamed.
 
 ---
@@ -171,8 +170,8 @@ Do not create or impose an artificial second general coding lifecycle. Delegate 
 | "The user asked me to implement it immediately, so approval is implied." | User prompts express feature requests, not specification consent. | Halt affected code changes; obtain explicit approval for spec delta. |
 | "I'll write the code first to explore, then update the spec after." | Code-first mutation leads to unapproved rule drift and missed edge cases. | Update spec FIRST, then implement code. |
 | "While I'm changing purchase eligibility, I might as well update usage rules." | Scope expansion violates developer authorization. | Confine edits strictly to the approved delta. |
-| "I refactored the module, so I should update the spec's Last Updated date." | Spec dates indicate business review, not internal refactoring. | Leave spec semantics and review dates untouched during refactors. |
-| "No spec exists, but existing code patterns make the business flow obvious." | Code patterns show *how* to build, not *what* business rules are intended. | Write a durable draft spec in `docs/specs/` and get approval first. |
+| "A refactor needs a manual spec freshness update." | Git records edits; an unchanged behavioral contract needs no metadata chore. | Update mappings only when their targets move; preserve unchanged spec content. |
+| "No spec exists, but existing code patterns make the business flow obvious." | Code patterns show how to build, not intended business behavior. | Generate the specification from supplied requirements, recording questions; resolve affected unknowns before implementation. |
 
 ---
 
@@ -189,12 +188,12 @@ Do not create or impose an artificial second general coding lifecycle. Delegate 
 
 ## Quick Reference
 
-| Situation | Action | Spec Status | Code Action |
+| Situation | Action | Spec Content | Code Action |
 |---|---|---|---|
-| **Spec & Code Disagree (affected task)** | STOP; present conflict neutrally | Unchanged | No code modifications |
-| **Spec & Code Disagree (unaffected task)** | Flag conflict; perform unaffected task | Unchanged | Modify only unaffected code |
-| **Approved Spec Change** | Update spec FIRST; then implement | `approved` | Implement strictly approved delta |
-| **New Feature / Missing Spec** | Write draft spec; resolve questions | `draft` until approved | No code until spec approved |
-| **Behavior-Preserving Refactor** | Refactor code; update tests | Unchanged (no date bump) | Refactor code; preserve behavior |
+| **Spec & Code Disagree (affected task)** | STOP; present conflict neutrally | Preserve disputed requirements | No affected code modifications |
+| **Spec & Code Disagree (unaffected task)** | Flag conflict; perform unaffected task | Preserve disputed requirements | Modify only unaffected code |
+| **Decided Behavior Change** | Update spec FIRST; then implement | Record the authorized delta | Implement strictly authorized delta |
+| **New Feature / Missing Spec** | Generate spec; record questions | Automatic metadata, explicit known behavior | Implement once material affected behavior is settled |
+| **Behavior-Preserving Refactor** | Refactor code; update tests | Update only relocated mappings | Preserve behavior |
 
 See [references/project-knowledge-standard.md](references/project-knowledge-standard.md) for complete specification schema and standards.
