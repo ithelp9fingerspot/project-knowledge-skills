@@ -8,7 +8,9 @@ Use the exact English headings and relative order under **Outline and Writing In
 
 `Include when: <condition>` marks conditional sections in plain prose outside the output heading. Other listed sections are required when their document is created. Omit irrelevant conditional sections; for a required but unresolved subject, name the specific unknown and decision needed. A concrete unknown is not an invitation to create empty scaffolds. Create a document only when evidence or explicit decisions support useful content. The standard's feature-spec non-applicability rules remain authoritative.
 
-Inspect evidence permitted by the standard, including its legacy-source gate. Distinguish implemented behavior, proposed choices, and approved intent. Illustrative examples below are not project facts, default architectures, or reusable business rules.
+Select applicable sections before drafting. A conditional section whose predicate is false is absent, not a heading followed by “none yet”; put a relevant unresolved decision in the nearest required section. A planned application alone does not establish runtime processes, environment variables, invocation syntax, or troubleshooting knowledge. During audit, first determine applicability from evidence, then assess heading presence.
+
+Inspect evidence permitted by the standard, including its legacy-source gate. Distinguish implemented behavior, proposed choices, and approved intent. With legacy prose excluded as a source, preservation permission only authorizes retaining its content: a preserved statement does not become a business-rule source, conflict candidate, or basis for new open questions. Illustrative examples below are not project facts, default architectures, or reusable business rules.
 
 Keep one content owner. Tooling owns command definitions and versions; documentation explains non-obvious use, sequencing, rationale, and hazards. Generated project documents must resolve local links inside that project, not depend on this guide, installed skills, or the skill repository. External product/API references are allowed. Transfer necessary spec-format and workflow guidance into the project's own spec index/workflow rather than linking back to skill references.
 
@@ -133,12 +135,16 @@ Read and follow [AGENTS.md](./AGENTS.md) before working in this repository.
 **Evidence:** Actual entrypoints, import/dependency boundaries, configuration, integrations, representative call paths, and explicit architecture decisions. For a new project, distinguish agreed design from implemented state.
 
 **Outline and Writing Instructions:**
-1. `## System Context`: State system responsibility and external actors/systems with real boundaries.
-2. `## Runtime Components`: Describe actual processes and how they communicate. Include when: runtime behavior exists or runtime components have been explicitly decided. Label planned components as planned.
-3. `## Repository Map`: Own the canonical project structure. Use a selective annotated tree or responsibility table, not both for the same information. Explain major directories, entrypoints, where common changes belong, and any generated code's source and regeneration link. For an empty project, say that implementation layout is undecided; do not invent implemented directories.
-4. `## Boundaries and Dependencies`: Explain allowed/evidenced dependency directions, ownership, and non-obvious constraints. Separate observations from approved architectural requirements.
-5. `## Key Flows`: Describe representative cross-component flows from actual code or approved design. State specific discovery gaps when no flow is established.
-6. `## Rationale`: Explain reasons backed by decisions, distinguishing unknown historical reasons from recommendations. Link durable later decisions to ADRs when present.
+
+Required sequence: `## System Context`, `## Repository Map`, `## Boundaries and Dependencies`, `## Key Flows`, `## Rationale`.
+- System Context: State system responsibility and evidenced external boundaries.
+- Repository Map: Own the canonical structure. Choose a selective annotated tree or responsibility table. Explain module roles, change placement, and generated sources/regeneration links when present. For an empty project, name the undecided implementation layout instead of supplying a hypothetical tree.
+- Boundaries and Dependencies: Explain evidenced dependency directions and ownership, separating observations from approved requirements.
+- Key Flows: Describe actual or explicitly agreed cross-component flows; otherwise name the unresolved flow decision.
+- Rationale: Explain backed reasons, distinguish unknown historical rationale, and link durable later ADRs where present.
+
+Conditional insertion, after System Context:
+- Include when: actual runtime behavior exists or specific runtime processes are explicitly decided. Insert `## Runtime Components` and describe those processes and communication; label decided-but-unimplemented components as planned. If only a product idea exists, omit this heading and record topology uncertainty in System Context.
 
 **Content Boundaries:** Repository Map owns semantic project structure; README and AGENTS link here. Keep feature code/test mappings in their specs and physical schema detail in data-model/schema sources. Repository Map links to adjacent dependency rules rather than repeating them.
 
@@ -180,12 +186,23 @@ Read and follow [AGENTS.md](./AGENTS.md) before working in this repository.
 **Evidence:** Manifests, scripts/Makefiles, config, example environment files, supported runtime help, and observed execution. Never expose secret values; distinguish inspected commands from commands actually run.
 
 **Outline and Writing Instructions:**
-1. `## Prerequisites`: Link version/config sources; explain prerequisites the tooling does not make obvious. Name unresolved requirements for uninitialized projects.
-2. `## Local Setup`: Give supported sequencing and non-obvious setup decisions; reference command definitions rather than invent commands for a future stack.
-3. `## Environment`: Explain required variable names, purpose, safe sources, and service dependencies. Include when: environment configuration exists or is explicitly specified. Secret values stay outside documentation.
-4. `## Running the Project`: Explain actual invocation and readiness observations. Include when: a runnable surface exists or its invocation is explicitly decided. Do not present planned commands as verified.
-5. `## Verification`: Explain supported lint/test/build/smoke invocations and prerequisites, linking tooling definitions. Note relevant backend/service limitations instead of claiming an in-memory substitute proves production behavior.
-6. `## Troubleshooting`: Record observed or explicitly established symptoms, causes, and remedies. Include when: supported troubleshooting knowledge exists.
+
+Required sequence: `## Prerequisites`, `## Local Setup`, `## Verification`.
+- Prerequisites: Link real version/config sources and explain non-obvious requirements; name unresolved prerequisites if uninitialized.
+- Local Setup: Explain supported sequencing and decisions; when tooling is undecided, record that decision instead of creating command names.
+- Verification: Explain supported lint/test/build/smoke procedures and tooling sources, or explicitly state what must be established before execution is available. Distinguish inspected guidance from observed runs and substitute tests from real-service verification.
+
+Conditional insertions, in this relative order:
+- Include when: actual environment configuration exists or variable/service requirements are explicitly decided. Insert `## Environment` after Local Setup; explain variable names, purpose and safe sources without secret values.
+- Include when: a runnable surface exists or exact invocation is explicitly decided. Insert `## Running the Project` before Verification; explain invocation/readiness and its verification status.
+- Include when: observed or explicitly established troubleshooting knowledge exists. Insert `## Troubleshooting` after Verification; give the supported symptom, cause and remedy.
+
+Selection examples:
+- Empty project with no tooling: output only Prerequisites, Local Setup, and Verification.
+- Existing library with a real test target but no environment configuration: explain the test target under Verification; omit Environment. A statement that no variables exist does not satisfy Environment's predicate.
+- Hypothetical language/framework errors are not established troubleshooting knowledge. Include Troubleshooting only when a real project symptom/remedy or explicit developer-provided operational fact supports it.
+
+Place a relevant absence or pending decision briefly under a required section. A missing app runner does not justify inventing a runtime process; library API usage may be described only from its actual contract.
 
 **Content Boundaries:** This file owns documented command use and sequencing. Testing/coding standards link here for execution and own methodology/rules instead. Tooling remains authoritative for command definitions; avoid copying its full option catalog.
 
@@ -290,6 +307,8 @@ Read and follow [AGENTS.md](./AGENTS.md) before working in this repository.
 2. `## Domain and Feature Index`: Use a task-oriented table of domain/feature, scope or trigger, and spec link. Add key model/code mapping only where it improves selection and can be maintained; detailed mappings remain in each spec.
 3. `## Format and Lifecycle`: Explain the required feature format in project-local terms, including status semantics and links to the project's spec-change workflow. Transfer the standard's necessary schema guidance here without a dependency on the skill repository.
 
+Proposed domains without feature documents are labelled `Not yet specified` without invented links or empty spec files. A domain name alone does not establish tax inclusion, rounding, regional rules, or unaffected behavior. When impact cannot be established, route to the known affected domains and name the specific remaining scope question; “catalog” does not by itself prove prices are pre-tax or unchanged.
+
 **Content Boundaries:** Feature rules live in the features; index rows provide only enough distinction to choose them. Workflow steps live in the workflow; shared glossary in project.md.
 
 **Example:** Illustrative scope distinctions: catalog pricing selects master/base-price rules; billing settings selects configurable rates/cutoffs; checkout selects calculation/application of those inputs. A change spanning these boundaries reads all affected specs, if such domains actually exist.
@@ -310,7 +329,7 @@ Read and follow [AGENTS.md](./AGENTS.md) before working in this repository.
 
 **Example:** Illustrative distinction: `Observed: evaluation returns True. Unknown: whether its caller persists cancellation.` A return value alone does not establish a persisted side effect.
 
-**Done When:** Every rule is supported and approval is honest; flows separate reads, validation, transitions, and writes; failure claims match evidence; criteria are observable and not fabricated execution logs; mapped paths exist or explicitly say Not yet available.
+**Done When:** Every rule is supported and approval is honest; flows separate reads, validation, transitions, and writes; failure claims match evidence; criteria are observable and not fabricated execution logs; mapped paths exist or explicitly say Not yet available. Resolve Markdown links from the spec file's own directory, not from the repository root, and actually open each destination; repository-relative code paths written as inline code are not Markdown link targets.
 
 ## Architecture Decision Records
 

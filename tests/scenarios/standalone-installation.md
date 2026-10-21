@@ -10,7 +10,7 @@ These scenarios verify that:
 ## Scenario Protocol
 
 1. **Environment**: Execute against disposable fixture directories in a temporary location (e.g. `/tmp/knowledge-standalone/...` and `/tmp/routing-fixture-...`). Never run against production or real target project repositories.
-2. **Isolation Guarantee**: For standalone verification, copy each skill to a clean directory containing *only* that skill (`SKILL.md` and `references/project-knowledge-standard.md`). Ensure no parent or sibling directory contains `shared/` or other skills.
+2. **Isolation Guarantee**: For standalone verification, copy each skill to a clean directory containing only that skill (`SKILL.md`, `references/project-knowledge-standard.md`, and `references/project-knowledge-authoring.md`). Ensure no parent or sibling directory contains `shared/` or other skills.
 3. **Fresh Agent Sessions**: Run each scenario with a fresh agent session without prior context. Baseline runs have no skill access or starting pointer; verification runs have access only to the standalone skill or the target fixture's `CLAUDE.md`.
 4. **Observation & Logging**: Record tool calls (reads, writes, searches, bash executions) and conversation turns verbatim. Verify what files were read, what reference paths were resolved, whether any out-of-boundary files were accessed, and what mutations occurred.
 5. **Evaluation**: Compare agent actions against the Observable Pass Criteria and Failing Baseline Behaviors defined in each scenario. Text presence alone in instructions does not satisfy these checks; observable behavior during execution is the sole test of truth.
@@ -27,7 +27,7 @@ Verify that each of the four skill packages:
 - `auditing-project-knowledge`
 
 operates completely independently when copied to an isolated directory without sibling skills or authoring repository dependencies (`shared/`). Verify that a fresh agent:
-1. Resolves its bundled reference (`references/project-knowledge-standard.md`) via local relative path without error.
+1. Resolves both bundled references via local relative paths and reaches only relevant authoring recipes at writing/auditing branches.
 2. Does not fail, halt, or request missing files when sibling skill directories are absent.
 3. Faithfully enforces the core contracts documented in the standard (independent legacy choices, refusal of fabricated schemas/approvals, read-only audit invariant, and approved spec boundary).
 
@@ -36,6 +36,7 @@ operates completely independently when copied to an isolated directory without s
    Copy each package from this repository's `skills/<skill-name>/` independently to `/tmp/knowledge-standalone/<skill-name>/`:
    - `/tmp/knowledge-standalone/documenting-existing-projects/SKILL.md`
    - `/tmp/knowledge-standalone/documenting-existing-projects/references/project-knowledge-standard.md`
+   - `/tmp/knowledge-standalone/documenting-existing-projects/references/project-knowledge-authoring.md`
    (Repeat for `initializing-project-knowledge`, `working-with-project-specs`, and `auditing-project-knowledge`).
    Confirm that `/tmp/knowledge-standalone/shared/` does NOT exist and skills cannot access sibling directories.
 
@@ -74,7 +75,7 @@ operates completely independently when copied to an isolated directory without s
     > "Stop. Audits must be read-only."
 
 ### Observable Pass Criteria
-1. **Local Reference Resolution**: The agent successfully resolves and reads `references/project-knowledge-standard.md` from its own local directory. Zero attempts to read `../shared/project-knowledge-standard.md` or access sibling skill folders.
+1. **Local Reference Resolution**: The agent reads the local standard and relevant authoring recipes from its own isolated package, including guide-to-standard schema links. Zero attempts to access source-repository or sibling skill references.
 2. **Zero Missing-Dependency Failures**: Each standalone skill executes without error or warning regarding missing sibling skills or missing repository root configuration.
 3. **Core Contract Adherence in Isolation**:
    - P1-A agent halts and asks both independent legacy choices (source usage and merge/replace mode) before reading legacy prose or writing files.
@@ -82,6 +83,8 @@ operates completely independently when copied to an isolated directory without s
    - P1-C agent detects spec conflict and stops before modifying code or specs.
    - P1-D agent reports findings in conversation and performs zero writes or edits to the target directory.
 4. **Honest Capability Reporting**: The agent recognizes that skill loading is determined by the host runtime environment and does not claim universal automatic discovery.
+5. **Self-Contained Authoring Routes**: Generated documents follow applicable headings/order with project-specific facts and unknowns. Starting at generated CLAUDE, physically read AGENTS then architecture's Repository Map, the relevant feature via the local spec index, and development verification guidance. Files and anchors exist inside the generated project; no installed-skill paths or source-repository links leak into output.
+6. **Conditional Sections**: An empty Python CLI project with undecided implementation layout and no UI/storage creates neither UI/data-model files nor invented runtime commands. Its repository map names the undecided layout rather than presenting a proposed tree as implemented.
 
 ### Failing Baseline Behaviors (RED)
 - Tool errors or broken links when attempting to access `../shared/project-knowledge-standard.md`.

@@ -146,7 +146,7 @@ Determine the minimal, grounded set of documentation files to produce:
   - `docs/specs/<domain>/<feature>.md` for initial features.
 
 ### Phase 3: Authoring Grounded Knowledge
-1. Author all documents in **English** adhering to the [Project Knowledge Standard](references/project-knowledge-standard.md).
+1. Author all documents in **English** adhering to the [Project Knowledge Standard](references/project-knowledge-standard.md). Before writing each file, read its recipe in the [Authoring Guide](references/project-knowledge-authoring.md); use the prescribed headings/order with this project's facts and applicable sections only. Read [AGENTS guidance](references/project-knowledge-authoring.md#agentsmd) for conditional routing and [architecture guidance](references/project-knowledge-authoring.md#docsarchitecturemd) for the canonical Repository Map, without inventing implemented structure.
 2. For any feature specification:
    - State `Status: draft`.
    - Provide domain glossary and numbered business rules (`BR-<DOMAIN>-<NUM>`).

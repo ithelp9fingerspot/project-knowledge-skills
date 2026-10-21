@@ -10,7 +10,7 @@
 
 **Spec:** [Project Knowledge Authoring Design](../specs/2026-10-21-project-knowledge-authoring-design.md)
 
-**Status:** Awaiting approval together with the design. No guide or sync implementation has been made.
+**Status:** Approved on 2026-10-21 with "oke coba implemen"; execution is recorded in the plan workspace ledger until final delivery.
 
 ## Global Constraints
 
@@ -93,4 +93,4 @@ Execute inline on a new `project-knowledge-authoring` branch in this checkout af
 
 ## Approval Handoff
 
-Approve the design and this three-task plan together. Proposed execution is inline, with scouts for exploration and a fresh final reviewer, on a new `project-knowledge-authoring` branch in this checkout. The planning workspace was clean before creating these two planning documents. No implementation, application changes, or scenario execution has occurred during planning.
+The user approved the design and this three-task plan on 2026-10-21. Execution is inline, with scouts for exploration and a fresh final reviewer, on branch `project-knowledge-authoring` in this checkout. The planning workspace was clean before the two planning documents were created.

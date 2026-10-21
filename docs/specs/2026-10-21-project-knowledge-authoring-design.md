@@ -2,7 +2,7 @@
 
 ## Intent and Approval State
 
-Define a consistent format for project documentation while deriving all substantive content from the project being documented. This design is awaiting approval together with its implementation plan; it does not authorize implementing the guide yet.
+Define a consistent format for project documentation while deriving all substantive content from the project being documented. The user approved this design and its implementation plan on 2026-10-21 with "oke coba implemen".
 
 User decisions:
 - Standardize document format; content always adapts to the project.

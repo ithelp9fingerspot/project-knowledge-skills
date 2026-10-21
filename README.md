@@ -192,14 +192,16 @@ GitHub hosting makes the repository usable as a CLI source. [skills.sh's FAQ](ht
 
 All scripts and tests use the Python 3 standard library with zero external package dependencies.
 
+Canonical documentation contracts live in `shared/project-knowledge-standard.md`; detailed per-file outlines and writing recipes live in `shared/project-knowledge-authoring.md`. Edit those sources only. Both files are bundled under each skill's `references/` directory so a standalone installation needs no sibling skill or source-repository access. Recipes standardize English headings and order, while contents follow the target project's evidence and decisions. `AGENTS.md` routes tasks; `docs/architecture.md#repository-map` owns project structure; development owns invocation procedures.
+
 ### 1. Synchronizing Packaged References
-To propagate edits from `shared/project-knowledge-standard.md` to all four skill packages:
+To propagate edits from both canonical references in `shared/` to all four skill packages:
 ```bash
 python3 scripts/sync-references.py
 ```
 
 ### 2. Checking Reference Parity
-To verify that all packaged references match the canonical standard without modifying files (exits `0` on parity, `1` on drift):
+To verify that all eight packaged references match their canonical sources without modifying files (exits `0` on parity, `1` on drift or missing source):
 ```bash
 python3 scripts/sync-references.py --check
 ```
@@ -226,6 +228,7 @@ Behavioral scenarios and evaluation rubrics live in `tests/scenarios/`:
 2. **Fresh Agent Sessions**: Run baseline (unassisted) and verification (skill-assisted) sessions in clean contexts to observe comparative behavior.
 3. **Observation & Logging**: Record verbatim tool calls and conversation turns. Inspect generated files for structure, grounded precision, and absence of fabricated decisions.
 4. **Source of Truth**: Observed agent behavior and fixture diff inspections constitute the sole evidence of compliance. Markdown rules alone do not prove behavioral safety.
+5. **Authoring Coverage**: Exercise ordered formats, grounded unknowns, conditional UI/storage omissions, architecture-owned repository maps, development-owned command procedures, and cross-domain spec selection. Copy the complete two-reference package for isolated runs; generated project links must remain self-contained. Audit scenarios compare target bytes before and after and report defects without repair.
 
 ---
 

@@ -119,6 +119,7 @@ Apply strictly the approved delta. Do NOT expand scope into neighboring rules, p
 
 ### 3. Specification Update Protocol
 When updating the feature spec (`docs/specs/<domain>/<feature>.md`):
+- Before authoring, read the [feature-spec recipe](references/project-knowledge-authoring.md#feature-specifications) and its linked standard schema. A spec-only change needs that recipe, not the entire guide; if other documents are affected, consult their recipes as well. Keep generated project links self-contained and update the local spec index when selection scope changes.
 - **Business Rules**: Update the specific rule (e.g. `BR-ADDON-001`) with clear, grounded wording.
 - **Acceptance Criteria**: Format updated criteria as open conditions (`- [ ]`). Never mark criteria as checked (`- [x]`) until automated tests have been run and verified.
 - **Data Model & Persistence**: Update the feature's ERD view if entity attributes or relationships changed. If repository-wide schema changes occurred, update `docs/data-model.md`.
@@ -132,6 +133,7 @@ When updating the feature spec (`docs/specs/<domain>/<feature>.md`):
 ### Case A: Missing Specification (New Feature or Unspecified Behavior)
 When requested to build a new feature or behavior where no specification exists:
 - **Do NOT Skip Straight to Code**: Do not assume business rules from copyable code patterns or vague user phrases like "you know the flow."
+- Read the [feature-spec recipe](references/project-knowledge-authoring.md#feature-specifications) and authoritative schema before drafting; use project evidence and explicit unknowns, not generic business rules.
 - **Author a Durable Draft Spec**: Create `docs/specs/<domain>/<feature>.md` immediately with:
   - `Status: draft`
   - Purpose & Scope

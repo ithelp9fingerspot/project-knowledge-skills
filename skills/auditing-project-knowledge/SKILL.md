@@ -104,6 +104,7 @@ Every finding must be categorized into one of three distinct classes:
 
 ### 1. Structural Checks (Deterministic)
 Verifiable file and path relationships evaluated without subjective interpretation:
+- **Applicable document formats and ownership**: At this audit branch, read the affected file recipes in the [Authoring Guide](references/project-knowledge-authoring.md). Check headings/order, conditional omissions, actual project facts, and content ownership, including architecture's Repository Map and development's invocation procedures. Trace task-conditioned links and overlapping-domain selection; reading a recipe authorizes no target writes. Distinguish applicable format defects from unresolved project decisions or irrelevant optional sections.
 - **Missing required entrypoints**: Absence of `README.md`, `AGENTS.md`, or `CLAUDE.md`.
 - **Missing standard documents**: Absence of `docs/project.md`, `docs/architecture.md`, `docs/development.md`, etc., when required by project state.
 - **Broken relative links**: Markdown links targeting non-existent files or anchors.

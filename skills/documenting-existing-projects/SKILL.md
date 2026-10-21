@@ -101,7 +101,7 @@ If code, tests, legacy documentation (when allowed as source), or requirements d
 4. If replace mode was selected, obtain explicit authorization for the file replacement mapping.
 
 ### Phase 6: Documentation Generation & Verification
-1. Author documentation according to the [Project Knowledge Standard](references/project-knowledge-standard.md).
+1. Author documentation according to the [Project Knowledge Standard](references/project-knowledge-standard.md). At this writing phase, read only the affected file recipes in the [Authoring Guide](references/project-knowledge-authoring.md); apply their headings/order using permitted project evidence. Use [AGENTS guidance](references/project-knowledge-authoring.md#agentsmd) for task conditions and [architecture guidance](references/project-knowledge-authoring.md#docsarchitecturemd) for the single authoritative Repository Map. Preserve the earlier legacy-source and write-mode decisions.
 2. **Language Invariant**: All generated documentation files must be in **English**, regardless of the user's prompt language or legacy document language.
 3. **Identifier Preservation**: Preserve exact code identifiers, method names, table columns, and error strings.
 4. **No Invented Failure Rules**: Do not elevate low-level language runtime type errors (e.g. `TypeError` on invalid constant types) into approved business failure rules.
