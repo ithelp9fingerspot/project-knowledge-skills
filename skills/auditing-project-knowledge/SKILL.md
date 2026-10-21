@@ -9,22 +9,10 @@ description: Use when auditing repository documentation against code, evaluating
 
 Evaluates repository documentation against code, schemas, and standards in a strictly read-only manner. Delivers structured findings in conversation without mutating target files, creating unrequested audit artifacts, or applying automatic rewrites.
 
-```dot
-digraph audit_workflow {
-    rankdir=TB;
-    start [label="Start Knowledge Audit", shape=box];
-    inspect [label="Read-Only Inspection\n(Code, Manifests, Schemas, Docs)", shape=box];
-    structural [label="Check Structural Integrity\n(Links, maps, required docs)", shape=box];
-    divergence [label="Compare Spec vs Code & Schema\n(Business rules, ERD vs migrations)", shape=box];
-    semantic [label="Evaluate Semantic Consistency\n(Standards alignment, terminology)", shape=box];
-    report [label="Report Findings in Conversation\n(Severity, Evidence, Confidence, Decision)", shape=box, style=filled, fillcolor="#ccffcc"];
-    stop [label="STOP: Await Developer Decisions\n(Do not mutate target files)", shape=diamond, style=filled, fillcolor="#ffcccc"];
+## Scope and Coverage
 
-    start -> inspect -> structural -> divergence -> semantic -> report -> stop;
-}
-```
+Before inspection, identify the requested documents, capability rules, and applicable structural/implementation/semantic checks. Track each in-scope item as examined or unverified with its reason; follow linked dependencies needed to assess it. Report this coverage in conversation, including inaccessible evidence and labelled outlines. An unverified item is a limitation, not evidence of divergence. Keep scope unchanged unless the developer authorizes a reduction.
 
----
 
 ## When to Use
 
@@ -105,7 +93,7 @@ Every finding must be categorized into one of three distinct classes:
 ### 1. Structural Checks (Deterministic)
 Verifiable file and path relationships evaluated without subjective interpretation:
 - **Applicable document formats and ownership**: At this audit branch, read the affected file recipes in the [Authoring Guide](references/project-knowledge-authoring.md). Check headings/order, conditional omissions, actual project facts, and content ownership, including architecture's Repository Map and development's invocation procedures. Trace task-conditioned links and overlapping-domain selection; reading a recipe authorizes no target writes. Distinguish applicable format defects from unresolved project decisions or irrelevant optional sections.
-- **AGENTS and outline safety**: Check new or merged AGENTS against its recipe's required task routing and physical-line policy; more than 150 lines is a defect, while the 60–100 target is not a minimum. Check unfinished documents for top notices, actionable section prompts, and incomplete labels in inbound indexes/routes. Report missing safeguards as structural defects without rewriting files.
+- **AGENTS and outline safety**: Apply the AGENTS recipe's required task routing and physical-line policy. Check unfinished documents against the standard's [structuring safeguards](references/project-knowledge-standard.md#documentation-structuring); report missing safeguards as structural defects without rewriting files.
 - **Missing required entrypoints**: Absence of `README.md`, `AGENTS.md`, or `CLAUDE.md`.
 - **Missing standard documents**: Absence of `docs/project.md`, `docs/architecture.md`, `docs/development.md`, etc., when required by project state.
 - **Broken relative links**: Markdown links targeting non-existent files or anchors.
@@ -148,12 +136,12 @@ Report all findings in conversation using the following structured format:
 
 ### Audit Summary Verdict
 
-Every audit must end with a clear, honest verdict:
-- **`PASS`**: All structural checks pass, zero spec/code divergences detected, zero standards conflicts found.
-- **`FAIL`**: One or more deterministic structural errors (broken links, missing docs) or spec/code contradictions observed.
-- **`BLOCKED`**: Standards contradict each other or unapproved divergences prevent determining repository compliance without a developer precedence decision.
+Every audit ends with the examined scope, unverified items/reasons, and a verdict bounded by that coverage:
+- **`PASS`**: Every applicable check for every in-scope item is complete, with no structural defects, observed divergences, or unresolved standards conflicts. Open requirements are valid; incomplete guidance is still disclosed as unfinished.
+- **`FAIL`**: An observed structural defect or spec/code contradiction exists. Report any additional unverified coverage separately; finding a defect does not complete the remaining audit.
+- **`BLOCKED`**: No established failure determines the verdict, but inaccessible evidence, unfinished guidance, or unresolved standards precedence prevents completing an applicable check. Name the missing evidence/input or decision. Report any completed checks without implying full compliance.
 
-**CRITICAL**: Passing link checks alone NEVER warrants a `PASS` verdict if semantic conflicts or spec divergences exist.
+**Done:** every in-scope item has an examined result or explicit limitation; the verdict distinguishes observed defects from missing evidence and describes only the verified scope.
 
 ---
 

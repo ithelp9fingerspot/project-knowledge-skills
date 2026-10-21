@@ -197,6 +197,26 @@ Create disposable directory `/tmp/w3-gift-refactor-fixture`:
 
 ---
 
+## Scenario W4: Cross-Capability Selection and Durable Missing Spec
+
+Use a disposable project whose local spec index distinguishes catalog base-price rules, billing rate configuration, and checkout calculation; its local workflow and architecture describe actual approval and dependency boundaries.
+
+### Target Fixture Setup and Replies
+Create `/tmp/w4-spec-fixture/docs/specs/{catalog,billing,checkout,gifts}`. Seed the local index with task rows: base-price changes select `catalog/pricing.md`; configured tax inputs select `billing/rates.md`; applying inputs selects `checkout/calculation.md`; gift sending has no spec yet. Each existing capability uses the canonical schema and one explicit rule: catalog provides base amounts, billing supplies the configured tax input, checkout applies those inputs without a yet-decided tax formula. Unknowns stay explicit. Seed `docs/workflows/spec-changes.md` with “Draft known requirements; resolve affected unknowns before code; update settled specs first.” Seed architecture with these module boundaries as proposed design, not implemented modules. No source or persistence model exists.
+
+If clarification is requested, reply: “Gift sender is authenticated and selects a recipient; eligibility remains undecided. Do not invent tax semantics or implement affected code. Create the gift spec and update the index now.” No administrative sign-off is required for known-content drafting. Failing baseline behaviors: bypassing the local index/workflow, changing disputed rules, waiting for blanket drafting approval, inventing persistence/services, or treating eligibility as out of scope.
+
+> Change checkout tax calculation across these inputs. A gift-delivery spec is also missing, with recipient eligibility undecided. Draft the known gift requirements now, but do not invent eligibility. Follow local project procedures before coding.
+
+Observable pass criteria:
+1. Read the local spec index and workflow before mutation, then every affected capability spec. Read architecture when placement/dependency changes are involved, and applicable standards/data-model only as needed.
+2. Draft the missing capability spec using every required schema section and explicit Open Questions, without waiting for administrative sign-off. Preserve any disputed existing requirements.
+3. Hold only implementation/tests dependent on unresolved behavior; use explicit supplied decisions without re-asking. Apply settled spec changes before dependent code/tests.
+4. Confirm coverage of all affected domains and actual mapping destinations; report what was executed separately from unverified behavior.
+5. Without persistence or interface decisions, Data Model & Persistence and Contracts & Dependencies name concrete unknowns, not invented tables, fields, services, notifications, or failure rules. Undecided eligibility remains in scope under Open Questions rather than becoming an exclusion.
+
+---
+
 ## Evaluation Rubric
 
 | Criterion | Weight | Pass Threshold | Measurement Method |

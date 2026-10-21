@@ -146,9 +146,13 @@ Only `skills/` contains installable packages. Root-level `shared/`, `scripts/`, 
 Generated `CLAUDE.md` contains only the import prescribed by the [canonical entrypoint contract](shared/project-knowledge-standard.md#root-entrypoints). The [authoring recipe](shared/project-knowledge-authoring.md#claudemd) shows its complete contents. `AGENTS.md` remains the shared instruction owner. This one Claude-specific eager import differs from ordinary task-conditioned Markdown pointers; splitting a manual into eager imports does not reduce loaded context.
 
 ### Safe Merges and Unfinished Documents
-Authorized merges preserve unique meaning while applying the current document recipes, not legacy layout. Generated and merged `AGENTS.md` files include task routing, target 60–100 physical lines, and never exceed 150; task-specific detail moves behind scoped links without dropping instructions. Shorter sufficient files need no padding. This line budget is project policy, not a universal agent limit.
+Authorized merges preserve unique meaning while applying the current document recipes, not legacy layout. Generated and merged `AGENTS.md` files follow the [AGENTS recipe](shared/project-knowledge-authoring.md#agentsmd), which owns task routing and physical-line policy. Task-specific detail moves behind scoped links without dropping unique instructions.
 
 Scaffolds and partially filled documents carry visible incomplete-content and action-required notices, concrete section-level filling instructions, and incomplete labels in inbound navigation. Templates and examples are not project requirements or executable procedures. See the [structuring safeguards](shared/project-knowledge-standard.md#documentation-structuring) and [AGENTS recipe](shared/project-knowledge-authoring.md#agentsmd).
+
+### Capability-Level Feature Specifications
+
+For discovery and spec decomposition, apply the [capability-boundary contract](shared/project-knowledge-standard.md#capability-boundaries); for flow depth, use the [feature authoring recipe](shared/project-knowledge-authoring.md#feature-specifications). Existing-project generation reconciles every discovered capability and branch with its spec or an explicit evidence gap. Ongoing work selects affected capabilities through the local spec index and workflow. Missing-spec drafting proceeds from known requirements while unsettled behavior blocks dependent implementation. Audit verdicts include examined scope and unverified coverage rather than treating an unexamined area as passing.
 
 ---
 

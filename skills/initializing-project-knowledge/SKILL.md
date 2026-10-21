@@ -29,6 +29,7 @@ Before creating files, inspect the target repository root:
 1. If the repository already contains code, database schemas, or existing documentation (`README.md`, `docs/`, wiki pages):
    - **STOP**.
    - If the codebase is already implemented, redirect to `documenting-existing-projects`.
+   - Before any legacy prose read or write, read the [Legacy Documentation contract](references/project-knowledge-standard.md#legacy-documentation). Apply its source, preservation-permission, and write-scope rules to the choices below; a merge choice alone does not grant a no-source preservation read.
    - If the developer intends to initialize documentation in a repository with existing documents, ask the two independent legacy choices before reading legacy prose for business meaning or writing files:
      - **Legacy Source Choice**: May existing documentation be used as an additional reference source for requirements?
      - **Write-Mode Choice**: Should new documentation merge with or replace existing documentation?
@@ -117,6 +118,8 @@ Determine the minimal, grounded set of documentation files to produce:
   - `docs/workflows/spec-changes.md`.
   - `docs/specs/README.md`.
   - `docs/specs/<domain>/<feature>.md` for initial features.
+
+For existing documentation, disclose the create/merge/replace/preserve mapping before writing. Obtain any missing scoped authorization, including relocation of unique CLAUDE instructions; apply the already-loaded legacy contract rather than treating replace as directory-wide permission.
 
 ### Phase 3: Authoring Grounded Knowledge
 1. Author all documents in **English** adhering to the [Project Knowledge Standard](references/project-knowledge-standard.md). Before writing each file, read its recipe in the [Authoring Guide](references/project-knowledge-authoring.md); use the prescribed headings/order with this project's facts and applicable sections only. Read [AGENTS guidance](references/project-knowledge-authoring.md#agentsmd) for conditional routing and [architecture guidance](references/project-knowledge-authoring.md#docsarchitecturemd) for the canonical Repository Map, without inventing implemented structure.

@@ -65,7 +65,7 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 - Business behavior changes: select all affected specs in the [Spec Index](docs/specs/README.md), then follow [Spec Changes](docs/workflows/spec-changes.md).
 ```
 
-**Done When:** New and merged files use Scope, Task Routing, Approval Boundaries, and Completion in order; every applicable task branch reaches actual authoritative material before action; stop rules name the decision needed; the final file has at most 150 physical lines, targeting 60–100 without filler. Count the written file and trace links, including CLAUDE to AGENTS. Report unresolved format/content conflicts instead of claiming compliance. Unfinished destinations are labelled and cannot supply project requirements.
+**Done When:** New and merged files use Scope, Task Routing, Approval Boundaries, and Completion in order; every applicable task branch reaches actual authoritative material before action; stop rules name the decision needed; the final file satisfies the physical-line policy above. Count the written file and trace links, including CLAUDE to AGENTS. Report unresolved format/content conflicts instead of claiming compliance. Unfinished destinations are labelled and cannot supply project requirements.
 
 ## CLAUDE.md
 
@@ -325,11 +325,14 @@ Proposed domains without feature documents are labelled `Not yet specified` with
 
 **Outline and Writing Instructions:** Follow the authoritative [Feature Spec Format](project-knowledge-standard.md#feature-spec-format), including headings, order, automatic metadata, and non-applicability instructions. Build scope and glossary before stable numbered rules; trace rules through data access, failure consistency, acceptance criteria, and actual implementation/test mappings. Generate known content immediately, recording unresolved in-scope behavior under Open Questions instead of requesting administrative approval.
 
+Before drafting, apply the standard's [capability boundaries](project-knowledge-standard.md#capability-boundaries): identify this spec's trigger and outcome, justify any grouped stages, and map the discovered routes/service operations to their flows. In Flows & Data Access, give each main or alternate flow a named subsection with prerequisites, ordered actions, state/effects, and result. Connect rejection branches to Failure Modes & Consistency and observable acceptance criteria. Preserve unknowns instead of filling gaps from common domain conventions.
+
+
 **Content Boundaries:** Shared entity relationships must agree with data-model; technical conventions link to standards. Record relevant current implementation gaps separately within Implementation & Test Mapping, with sources, rather than rewriting approved behavior to match a bug. Project-specific subsections may clarify existing sections without replacing the schema.
 
 **Example:** Illustrative distinction: `Observed: evaluation returns True. Unknown: whether its caller persists cancellation.` A return value alone does not establish a persisted side effect.
 
-**Done When:** Every rule is supported and approval is honest; flows separate reads, validation, transitions, and writes; failure claims match evidence; criteria are observable and not fabricated execution logs; mapped paths exist or explicitly say Not yet available. Resolve Markdown links from the spec file's own directory, not from the repository root, and actually open each destination; repository-relative code paths written as inline code are not Markdown link targets.
+**Done When:** Every in-scope capability is mapped or has an explicit discovery gap; each spec has a distinct outcome and justified grouped stages. Every discovered flow/branch is traced to evidence or marked unverified; all rules, failure claims, and effects retain their source and evidence status. Criteria are observable and not execution logs; mapped paths exist or explicitly say Not yet available. Resolve Markdown links from the spec file's own directory, not the repository root, and actually open each destination; repository-relative code paths written as inline code are not Markdown link targets.
 
 ## Architecture Decision Records
 

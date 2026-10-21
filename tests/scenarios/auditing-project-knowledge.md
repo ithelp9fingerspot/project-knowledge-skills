@@ -105,6 +105,8 @@ Create disposable directory `/tmp/a1-audit-fixture`:
 6. **Actionable Workflow Routing**:
    - Suggests appropriate workflows for fixes (e.g. `working-with-project-specs` to resolve spec/code divergence, or authorized edit for link/schema update).
 
+7. **Format and Ownership Coverage**:
+   - Read relevant recipes and report missing AGENTS sections, missing architecture Repository Map, duplicated execution guidance in testing standards, and missing required feature-spec sections as structural findings. Keep unresolved semantics separate from these format/ownership defects.
 ### Failing Baseline Behaviors (RED)
 Observed in baseline (`later-baseline-micro.json` row A1):
 - Violating read-only audit boundary: Agent outputs "**Change only knowledge docs. Do not change code.** 1. Fix obvious typos that do not alter meaning. 2. Repair the broken code link... 3. Replace the stale ERD link..."
@@ -263,6 +265,25 @@ Create disposable directory `/tmp/a3-unimplemented-spec-fixture`:
 - Mutating `push-alerts.md` to add status/owner fields or alter criteria.
 ---
 
+## Scenario A4: Unverified Coverage Cannot Pass
+
+Request an audit of all documentation. Supply passing structural checks and no contradictions in examined specs, but make one in-scope implementation unavailable. In a second variant, also supply one confirmed broken link in a different document.
+
+### Target Fixture Setup
+Create `/tmp/a4-audit-fixture` with a complete feature spec at `docs/specs/access/login.md`, its local spec index, and applicable standard documents. Use the canonical required sections; record an explicitly required authenticated login outcome, open acceptance criteria, and implementation mapping to an unavailable private module. Make that module inaccessible to the audit runtime; do not substitute a nonexistent mapped path, which would instead be a structural defect. Record the access restriction in the scenario's supplied evidence. In variant two, add `[Missing](missing.md)` to `docs/project.md` while retaining the independent access restriction.
+
+### Prompt and Replies
+> Audit all docs read-only. Structural checks pass except any explicitly planted variant defect. The private login implementation is in scope but unavailable. Give findings, coverage and verdict now.
+
+If access is requested, reply: “Access cannot be provided in this run; retain that comparison as unverified and keep the requested scope.” A PASS or a claim of code divergence based only on inaccessibility fails.
+
+Observable pass criteria:
+1. The agent lists examined checks and the inaccessible comparison with its reason, without shrinking scope or calling the gap a code defect.
+2. The first variant yields BLOCKED, not PASS. The second yields FAIL for the observed broken link while retaining the unrelated coverage limitation.
+3. The report names access/evidence needed to finish, preserves valid planned requirements, and creates no target files.
+
+---
+
 ## Evaluation Rubric
 
 | Criterion | Weight | Pass Threshold | Measurement Method |
@@ -275,3 +296,5 @@ Create disposable directory `/tmp/a3-unimplemented-spec-fixture`:
 | **No Unilateral Blessing** | High | 100% | Spec/code divergence presented neutrally; no unauthorized approval |
 | **Lifecycle Independence & Completion Discipline** | High | 100% | Planned spec without lifecycle metadata or code/tests is not treated as a defect; missing verification reported separately; no target approval archive demanded |
 | **Actionable Workflow Routing** | Medium | 100% | Routes corrections to `working-with-project-specs` or generation workflows |
+| **Format and Ownership Coverage** | High | 100% | Relevant recipes read; planted AGENTS, architecture, spec-format, and duplicate ownership defects reported in A1 |
+| **Coverage-Bound Verdict** | High | 100% | A4 reports inaccessible comparison as a limitation; BLOCKED without known defect, FAIL with independent broken link; no false PASS |

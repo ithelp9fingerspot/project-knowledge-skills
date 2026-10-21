@@ -30,20 +30,18 @@ You must obtain answers to two independent choices. If not already explicitly pr
 1. **Legacy Source Choice**: May existing legacy documentation be used as an additional reference source for business rules and intent alongside code and schema?
 2. **Write-Mode Choice**: Should new documentation **merge** with existing documentation, or **replace** existing documentation?
 
-```dot
-digraph legacy_gate {
-    rankdir=TB;
-    start [label="Existing docs detected?", shape=diamond];
-    choices_known [label="Both choices explicitly given?", shape=diamond];
-    ask_choices [label="STOP: Batch both questions\n1. Source usage?\n2. Merge vs Replace?", shape=box, style=filled, fillcolor="#ffcccc"];
-    inspect_code [label="Inspect code, schema, manifests", shape=box, style=filled, fillcolor="#ccffcc"];
+```mermaid
+flowchart TD
+    start{"Existing docs detected?"}
+    choices_known{"Both choices explicitly given?"}
+    ask_choices["STOP: Ask both legacy choices<br/>Source usage and merge or replace"]
+    inspect_code["Inspect code, schema, manifests"]
 
-    start -> choices_known [label="yes"];
-    start -> inspect_code [label="no"];
-    choices_known -> inspect_code [label="yes"];
-    choices_known -> ask_choices [label="no"];
-    ask_choices -> inspect_code [label="after answers received"];
-}
+    start -->|Yes| choices_known
+    start -->|No| inspect_code
+    choices_known -->|Yes| inspect_code
+    choices_known -->|No| ask_choices
+    ask_choices -->|Answers received| inspect_code
 ```
 
 ### Enforcing the Source Choice
@@ -73,19 +71,21 @@ digraph legacy_gate {
 2. Read project manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) to identify language, dependencies, and build commands. Do not copy dependency versions into prose documents.
 3. Inspect linter/formatter configurations to establish coding standards. Never invent generic policies (e.g. PEP 8, generic style guides) from tiny code fixtures; label unconfigured patterns as proposals until approved.
 4. Inspect database schemas, migrations, and ORM models to reconstruct the data model.
-5. Trace entrypoints, API routing, and service logic to identify features and boundaries.
+5. Before choosing spec files, read the [capability-boundary contract](references/project-knowledge-standard.md#capability-boundaries). Inventory every in-scope capability by tracing entrypoints, routes, service operations, schema effects, and tests; domain names are grouping labels, not completed specs. Apply the contract's grouping and coverage rules rather than using one overview or one file per endpoint.
    - Distinguish return values from side effects (e.g. returning `True` from an eligibility check is not the same as mutating state or cancelling an entity).
    - Do not strengthen terminology beyond code identifiers (e.g. `GRACE_DAYS = 7` is 7 days, NOT "calendar days" or "business days" without explicit backing).
    - Do not assert unevidenced architectural guarantees (e.g. thread-safety, atomicity) without explicit concurrency primitives.
 6. Inspect automated tests to observe developer test expectations.
    - **Crucial**: Existing tests prove implementation expectations and assertions, NOT approved business intent.
    - Describe code-derived claims as observed behavior with their sources, not developer-endorsed requirements.
+   - **Done:** every discovered capability has an evidence trail, a proposed spec or justified grouped stage, and enumerated main/alternate/rejection paths; untraced paths are explicit gaps, not silently excluded.
 ### Phase 3: Target File Mapping & Scope Disclosure
 Present the planned documentation mapping to the developer before writing files:
 - Files to create (e.g. `AGENTS.md`, `CLAUDE.md`, `docs/project.md`, `docs/architecture.md`, `docs/data-model.md`, `docs/specs/...`).
 - Files to update or merge into (under merge mode).
 - Files to replace or relocate (under replace mode: disclosed standard destination paths and individually disclosed, specifically authorized nonstandard sources).
 - Files preserved untouched (undisclosed, out-of-scope, or unique operational, compliance, and legacy files).
+- Capability-to-spec mapping, grouped-stage rationale, and discovery gaps; disclose coverage before treating the domain as documented.
 
 ### Phase 4: Neutral Conflict Presentation
 If code, tests, legacy documentation (when allowed as source), or requirements disagree:
@@ -111,6 +111,7 @@ Generate the requested documents from permitted evidence without owner assignmen
    - Check feature ERDs match the shared data model in `docs/data-model.md`.
    - Confirm observations and intended requirements remain distinguishable, with no administrative lifecycle fields.
    - Ensure no temporary discovery artifacts or `changes/` folders were created.
+   - Reconcile the capability inventory with generated specs: each discovered flow and rejection branch is documented with its evidence or reported as unverified. A domain overview alone cannot satisfy capability coverage.
 ---
 
 ## Rationalization Table & Red Flags

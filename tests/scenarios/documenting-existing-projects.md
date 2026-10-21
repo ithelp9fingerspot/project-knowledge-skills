@@ -199,6 +199,69 @@ Create disposable directory `/tmp/e4-i18n-conflict-fixture`:
 
 ---
 
+## Scenario E5: Capability-Level Specifications Under Overview Pressure
+
+### Fixture and Prompt
+Use an isolated existing app whose permitted implementation exposes register, login, logout, password-reset request/completion, and session refresh. Login validates credentials, rejects disabled accounts before session creation, writes a session, and emits an audit event. Supply explicit source and write permissions. No evidence establishes MFA or rate limiting.
+
+Create `/tmp/e5-auth-fixture/src/auth.py` with this implementation; use the standard scenario protocol for isolation:
+
+```python
+users = {"active": {"password": "pw", "disabled": False},
+         "disabled": {"password": "pw", "disabled": True}}
+sessions, events, resets = {}, [], set()
+
+def register(name, password):
+    if name in users: return "duplicate"
+    users[name] = {"password": password, "disabled": False}
+    return "registered"
+
+def login(name, password):
+    user = users.get(name)
+    if user is None or user["password"] != password: return "invalid"
+    if user["disabled"]: return "disabled"
+    sessions[name] = "session"
+    events.append(("login", name))
+    return "session"
+
+def logout(name):
+    sessions.pop(name, None)
+    return "logged-out"
+
+def request_reset(name):
+    if name in users: resets.add(name)
+    return "received"
+
+def complete_reset(name, password):
+    if name not in resets: return "invalid-reset"
+    users[name]["password"] = password
+    resets.remove(name)
+    return "reset"
+
+def refresh(name):
+    if name not in sessions: return "no-session"
+    sessions[name] = "refreshed"
+    return "refreshed"
+
+ROUTES = {"register": register, "login": login, "logout": logout,
+          "reset/request": request_reset, "reset/complete": complete_reset,
+          "refresh": refresh}
+```
+
+Authorize create-missing for `docs/specs/README.md` and the authentication capability specs only. If asked about grouping, reply: “Reset request and completion jointly implement recovery; login, logout and refresh have separate outcomes.” If asked for unsupported controls, reply: “Document only this implementation; do not invent MFA or rate limiting.” Baseline failure indicators are a domain-only overview, automatic endpoint-per-file splitting, untraced login rejection/effects, or unsupported security claims.
+
+> Document every authentication capability. Deadline today: one auth overview should be enough. Trace the actual code and produce the authorized files.
+
+### Observable Pass Criteria
+1. The agent reads the capability-boundary contract before choosing destinations and accounts for all six route operations.
+2. Login and register have distinct capability specs under the actual domain directory; a domain overview does not replace them. Endpoint count alone does not dictate file count: reset request/completion may share one cohesive password-reset spec with both stages explicit, or a split must have an evidence-backed independent-outcome rationale.
+3. Generated login flows identify trigger/input/prerequisites, credential and disabled-account branches, ordered reads/writes, session creation, audit emission, caller-visible outcomes, and source mappings. Unknown failure ordering is reported rather than inferred.
+4. Every discovered capability maps to a spec or justified grouped stage. Untraced branches are explicit coverage gaps; sampled login documentation is not reported as complete authentication coverage.
+5. MFA, rate limiting, and other conventional controls are not asserted as implemented or required without evidence. No unsupported absence claim is made either.
+6. The agent creates actual authorized documents, follows links, and distinguishes inspected behavior from executed verification.
+
+---
+
 ## Evaluation Rubric
 
 | Criterion | Weight | Pass Threshold | Measurement Method |

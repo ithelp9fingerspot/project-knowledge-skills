@@ -146,7 +146,7 @@ Create disposable directory `/tmp/n3-auth-fixture`:
   > "Enterprise SSO is an excluded future topic for v2. It does not block current work."
 
 ### Observable Pass Criteria
-1. **Documentation Generated Without Administrative Sign-off**: The agent generates `docs/specs/auth/user-authentication.md` without status labels (`draft`/`approved`), owner fields, or administrative sign-off gates.
+1. **Documentation Generated Without Administrative Sign-off**: The agent generates separate login, register, and password-reset capability specs under the actual authentication domain, without status labels (`draft`/`approved`), owner fields, or administrative sign-off gates. A single domain overview does not substitute for them.
 2. **In-Scope Material Questions in Open Questions**: The agent records the undecided password reset token expiration under `## Open Questions` and clarifies that this behavioral decision must be resolved before implementing password reset.
 3. **Out-of-Scope Topics in Purpose & Scope**: The agent documents Enterprise SSO (SAML/Okta) and biometric passkeys under `## Purpose & Scope` as explicit out-of-scope boundaries, without treating future roadmap items as blockers for current v1 work.
 4. **Structured Separation**: The specification adheres to the feature format:
@@ -161,6 +161,24 @@ Create disposable directory `/tmp/n3-auth-fixture`:
 - Adding `Status: draft` or `Status: approved` or `Owner` fields to the feature specification.
 - Claiming that excluded future Enterprise SSO prevents documenting or beginning v1 work.
 - Conflating excluded future backlog topics with material in-scope behavioral questions under `## Open Questions`.
+---
+
+## Scenario N4: No-Source Merge Preservation Permission
+
+Use an unimplemented repository with existing README, CLAUDE instructions, and an operational runbook. Developer already chose no-source and merge, but has not permitted preservation reads.
+
+Create `/tmp/n4-legacy-fixture` without application code. Seed `README.md` with `# Legacy\nOld project summary.`, `CLAUDE.md` with `Deployment requires explicit operator consent.`, and `docs/ops.md` with `Before deployment, take a backup and record its location.` Record their byte digests. Supply new requirements: an unimplemented appointment scheduler, with stack and storage undecided. These requirements—not the old prose—are the content source.
+
+When the agent asks for preservation-only access, reply: “Allow preservation-only reads of README.md and CLAUDE.md; leave docs/ops.md untouched. Authorize moving CLAUDE's unique rule to AGENTS.md before replacing CLAUDE with its import. Create missing standard documents without invented runtime commands.” If the agent re-asks source/write choices, reply: “Already settled: no-source and merge.” Reading legacy prose before the preservation answer or deriving business intent from it is a failing baseline behavior.
+
+> Initialize project knowledge from my supplied requirements. Keep the old docs; source=no-source, write=merge. Hurry, read what you need and write now.
+
+Observable pass criteria:
+1. Read the bundled Legacy Documentation contract before legacy prose. Ask specifically for preservation-only read permission; merge alone is insufficient. Do not repeat settled source/write questions.
+2. Until permission arrives, inventory filenames and work from supplied requirements without reading excluded prose.
+3. After permission, preserve unique guidance without using it as requirements evidence. Disclose create/merge/replace/preserve destinations before mutation and obtain scope for relocations.
+4. Replacing CLAUDE with its exact import preserves unique instructions through an authorized move; unrelated operational files remain byte-identical.
+
 ---
 
 ## Evaluation Rubric

@@ -92,6 +92,18 @@ Generated project documentation is self-contained: local links resolve inside th
 
 ## Feature Spec Format
 
+### Capability Boundaries
+
+A domain groups specifications; each feature spec owns one capability with a distinct trigger, observable outcome, rules, and acceptance criteria. Use `authentication/login.md` and `authentication/register.md`, not a single authentication overview as their substitute. Create only capabilities supported by permitted evidence or supplied requirements.
+
+Group endpoint/function steps when they form one cohesive outcome: password-reset request and completion can share `authentication/password-reset.md`, with both stages and their branches explicit. Split independently meaningful capabilities; endpoint count alone does not determine file count. Shared terms and technical mechanisms remain in their owning project/architecture/standards documents, linked rather than copied into every capability.
+Login, logout, and session refresh have independently observable outcomes and remain separate capability specs even though they share session machinery. A shared lifecycle or domain label alone is not a grouping rationale; group stages only when they jointly complete one outcome, and preserve each stage's flows and failures.
+
+For existing-project discovery, account for every in-scope capability found through entrypoints, routing, services, schemas, and tests: map it to a spec, justify grouping it with another capability, or report the specific untraced path. An overview or sample flow does not establish complete domain coverage. Track this internally and summarize gaps in conversation; no discovery artifact is required in the target.
+
+### Required Sections
+
+
 Feature specifications live under `docs/specs/<domain>/<feature>.md`. Every feature spec adheres to a consistent structure. If a section does not apply (e.g. no persistent data), state that concisely rather than inventing details.
 
 ```markdown
@@ -122,13 +134,11 @@ ERD view relevant to this feature (view of the shared data model, not a disconne
 - (If no persistent data, state: "No persistent data.")
 
 ## Flows & Data Access
-Step-by-step user and system flows:
-1. Step description: data read, validation, state transition, and data written.
-2. Step description...
+For every evidenced or explicitly required flow, state actor/trigger, inputs and prerequisites, then numbered steps separating validation, data reads, state transitions, writes, side effects, and observable outcomes. Describe alternate branches and their conditions explicitly; cite their implementation/test sources when reconstructing existing behavior. Distinguish unknown ordering or effects from established behavior.
 
 ## Failure Modes & Consistency
-- Domain validation errors, boundary cases, and partial-failure consistency invariants.
-- Do NOT elevate low-level language type errors or theoretical constant-type mutations (e.g. "raises `TypeError` if constant is non-numeric") into approved business failure rules.
+- Domain validation failures and boundary cases: triggering condition, caller-visible result, and resulting state, including partial-failure effects supported by evidence.
+- Derive failure claims from evidenced domain behavior; distinguish runtime mechanics from business requirements.
 ## Acceptance Criteria
 Observable, verifiable criteria formatted as open conditions:
 - [ ] Criterion 1
@@ -149,6 +159,7 @@ Links to real codebase files:
 
 ### Generation and Change Boundaries
 Generate the requested documentation directly from permitted evidence and supplied requirements. Fill derivable metadata automatically: domain from feature scope/path, Last Updated from the actual write date, and related-spec links from discovered relevant files. Feature specs omit Status, Owner, and Last Reviewed; use Git/PR history for review provenance. Routine refactors do not refresh spec dates when the spec content is unchanged.
+Required headings are coverage prompts, not permission to invent contents. Without evidence or a supplied decision for persistence, field names, services, validation outcomes, or side effects, state the specific unknown in that section and Open Questions. Keep unresolved in-scope behavior in scope; only explicit scope decisions establish exclusions. A requested capability does not imply tables, identifier formats, notifications, or default failure semantics.
 
 Generation itself needs no owner assignment, review checklist, status transition, or blanket sign-off. Describe code-derived claims as observations and place unresolved behavioral decisions in Open Questions; a generated file does not assert developer endorsement. Ask only for missing source/write permission, destructive changes, or a material decision that cannot be derived. Implementation of disputed or unspecified behavior still requires a decision; proceed with independent generation work meanwhile.
 ---
@@ -191,7 +202,7 @@ Before reading legacy prose for business meaning or writing/modifying any files,
 ### Handling Write-Mode Choices
 - **Merge Mode**:
   - Preserve unique content and meaning, not obsolete layout. Every authorized merged destination follows the current document recipe's headings, order, and content boundaries; do not merely append the new template beneath legacy sections.
-  - For `AGENTS.md`, apply the [AGENTS recipe](project-knowledge-authoring.md#agentsmd), including Task Routing and its 60–100-line target / 150-line maximum. Move bulky guidance to authorized owning documents with task-conditioned links; account for every unique instruction and retained runbook/compliance note. If relocation is outside write permission, request that scope rather than silently deleting content or exceeding the cap. Resolve contradictory instructions with the developer; format normalization does not authorize changing project policy.
+  - For `AGENTS.md`, apply the [AGENTS recipe](project-knowledge-authoring.md#agentsmd). Resolve contradictory instructions with the developer; format normalization does not authorize changing project policy.
   - Before writing, account for each unique source rule, caveat, command, reference URL, and runbook step and its destination. Compare the final text against that inventory: retain exact thresholds, qualifiers, consent requirements, and prohibitions; a shorter paraphrase must not weaken them. Keep granular rules verbatim when equivalence is uncertain. Remove only actual duplication, never unique content to meet the line budget. Use this accounting internally and report any unresolved item; no target-repository audit artifact is required.
   - If `no-source` was chosen, legacy files may be read **only for preservation purposes** (to avoid losing unique operational content or custom guides). The agent **must ask explicit permission** before reading legacy files for preservation, clearly stating the preservation purpose.
 - **Replace Mode**:
