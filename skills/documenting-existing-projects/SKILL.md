@@ -53,6 +53,7 @@ digraph legacy_gate {
 ### Enforcing the Write-Mode Choice
 - **Merge Mode**:
   - Preserve existing unique operational documents, runbooks, and compliance notes.
+  - Normalize authorized merged destinations to the current recipes, preserving unique meaning rather than legacy layout. Apply the standard's merge rules and AGENTS recipe; account for relocated guidance and obtain scope for any additional destination before moving content.
   - If `no-source` was chosen, reading legacy files for preservation (e.g. checking whether a file has unique operational notes) **requires explicit developer permission first**, stating the preservation-only purpose.
 - **Replace Mode**:
   - Replacement scope is strictly limited to disclosed standard destination paths (`README.md`, `AGENTS.md`, `CLAUDE.md`, and standard `docs/` paths) plus individually disclosed, specifically authorized nonstandard sources being replaced or relocated into the new structure (e.g. migrating `docs/overview.md` or `docs/deploy-manual.md`).

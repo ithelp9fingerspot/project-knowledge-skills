@@ -8,6 +8,8 @@ Use the exact English headings and relative order under **Outline and Writing In
 
 `Include when: <condition>` marks conditional sections in plain prose outside the output heading. Other listed sections are required when their document is created. Omit irrelevant conditional sections; for a required but unresolved subject, name the specific unknown and decision needed. Content authoring requires useful evidence or explicit decisions; requested outlines follow the standard's [Documentation Structuring](project-knowledge-standard.md#documentation-structuring) contract and retain these same headings.
 
+When a requested scaffold or partially filled document contains filling prompts, apply the standard's [unfinished-document safeguards](project-knowledge-standard.md#documentation-structuring), including visible notices and section-level actions. These safeguards also apply during authorized merges; format compliance alone does not make unfinished content authoritative.
+
 Select applicable sections before drafting. A conditional section whose predicate is false is absent, not a heading followed by “none yet”; put a relevant unresolved decision in the nearest required section. A planned application alone does not establish runtime processes, environment variables, invocation syntax, or troubleshooting knowledge. During audit, first determine applicability from evidence, then assess heading presence.
 
 Inspect evidence permitted by the standard, including its legacy-source gate. Distinguish implemented behavior, proposed choices, and approved intent. With legacy prose excluded as a source, preservation permission only authorizes retaining its content: a preserved statement does not become a business-rule source, conflict candidate, or basis for new open questions. Illustrative examples below are not project facts, default architectures, or reusable business rules.
@@ -49,7 +51,7 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 3. `## Approval Boundaries`: State actionable stop conditions and the decision needed, linking to the project's workflow for detail. A conflict between approved spec and observed behavior requires a developer decision, not unilateral selection of a winner.
 4. `## Completion`: Identify required observed verification, affected documentation reconciliation, and remaining-decision reporting. Link to procedures instead of copying command catalogs.
 
-**Content Boundaries:** Keep root instructions compact by scope, not an arbitrary line limit. Architecture owns structure, standards own implementation/test guidance, specs own business rules, and the workflow owns detailed approval stages. Keep a guardrail with its technical topic unless it genuinely applies across tasks. CLAUDE points here; rules are not copied back into it.
+**Content Boundaries:** Target 60–100 physical lines per generated or merged `AGENTS.md`, including blank lines; never exceed 150. This is the project's size policy, not a universal tool limit. Keep shorter files when sufficient; do not pad, minify, or drop unique instructions to hit a count. Move task-specific detail to its owning document and leave a task-conditioned link, preserving meaning and authorized scope. Architecture owns structure, standards own implementation/test guidance, specs own business rules, and the workflow owns detailed approval stages. Keep cross-task guardrails here. CLAUDE points here; rules are not copied back into it.
 
 **Example:** Illustrative routing; retain only applicable rows with real target files:
 
@@ -63,7 +65,7 @@ Keep one content owner. Tooling owns command definitions and versions; documenta
 - Business behavior changes: select all affected specs in the [Spec Index](docs/specs/README.md), then follow [Spec Changes](docs/workflows/spec-changes.md).
 ```
 
-**Done When:** For every applicable task branch, a reader can reach the authoritative material before acting; conditions distinguish actual tasks; stop rules say what needs a decision; no manual, schema, full project tree, or duplicated business rules have accumulated here. Trace actual links, including CLAUDE to AGENTS.
+**Done When:** New and merged files use Scope, Task Routing, Approval Boundaries, and Completion in order; every applicable task branch reaches actual authoritative material before action; stop rules name the decision needed; the final file has at most 150 physical lines, targeting 60–100 without filler. Count the written file and trace links, including CLAUDE to AGENTS. Report unresolved format/content conflicts instead of claiming compliance. Unfinished destinations are labelled and cannot supply project requirements.
 
 ## CLAUDE.md
 

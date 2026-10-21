@@ -145,6 +145,11 @@ Only `skills/` contains installable packages. Root-level `shared/`, `scripts/`, 
 ### Thin `CLAUDE.md` Routing
 Generated `CLAUDE.md` contains only the import prescribed by the [canonical entrypoint contract](shared/project-knowledge-standard.md#root-entrypoints). The [authoring recipe](shared/project-knowledge-authoring.md#claudemd) shows its complete contents. `AGENTS.md` remains the shared instruction owner. This one Claude-specific eager import differs from ordinary task-conditioned Markdown pointers; splitting a manual into eager imports does not reduce loaded context.
 
+### Safe Merges and Unfinished Documents
+Authorized merges preserve unique meaning while applying the current document recipes, not legacy layout. Generated and merged `AGENTS.md` files include task routing, target 60–100 physical lines, and never exceed 150; task-specific detail moves behind scoped links without dropping instructions. Shorter sufficient files need no padding. This line budget is project policy, not a universal agent limit.
+
+Scaffolds and partially filled documents carry visible incomplete-content and action-required notices, concrete section-level filling instructions, and incomplete labels in inbound navigation. Templates and examples are not project requirements or executable procedures. See the [structuring safeguards](shared/project-knowledge-standard.md#documentation-structuring) and [AGENTS recipe](shared/project-knowledge-authoring.md#agentsmd).
+
 ---
 
 ## Installation and Host-Loading Limitations
