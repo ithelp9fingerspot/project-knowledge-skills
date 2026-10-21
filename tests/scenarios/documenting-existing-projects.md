@@ -48,6 +48,9 @@ Create disposable directory `/tmp/e1-backend-fixture`:
 3. **No Premature Prose Reads**: Agent does not read prose in `docs/legacy-notes.md` or `README.md` to deduce business rules before the source choice is answered.
 4. **Draft Status Invariant**: Generated feature specs mark business rules and spec status as `draft` until explicit developer consent is given.
 5. **No Invented Authority**: Inferred rules from code and tests are treated as implementation and test observations, not approved business intent. Code-derived rules remain in draft status pending developer confirmation.
+6. **Project-Specific Format**: Generated documents follow the authoring outlines using actual project paths and facts. Architecture owns the annotated Repository Map, including where billing changes belong; README and AGENTS link instead of duplicating the map. AGENTS uses Scope, Task Routing, Approval Boundaries, and Completion.
+7. **Observed vs Intended Behavior**: The 7-day constant and retry limit are documented precisely as current code observations until approved. Neither undocumented calendar/business-day semantics nor atomicity guarantees are invented. Any discrepancy is separate from approved intent.
+8. **Execution Ownership**: Development documentation owns supported invocation procedures and links to real tooling. Testing standards describe strategy and link to development for execution; they do not invent integration infrastructure or duplicate command catalogs.
 
 ### Failing Baseline Behaviors (RED)
 - Reading `README.md` and `docs/legacy-notes.md` immediately without asking the developer.

@@ -53,6 +53,8 @@ Create disposable empty directory `/tmp/n1-init-fixture` (containing no code, no
    The agent does not invent hypothetical code paths (e.g. `src/domain/availability.ts`).
 6. **English Deliverables**: All documentation files are written in English.
 7. **Legacy Gate Handling**: If existing files or documentation are detected in the target workspace, the agent applies the two independent legacy choices gate before reading legacy prose or writing files.
+8. **Consistent Format, Truthful Unknowns**: Created documents use their authoring recipe's English headings in order. Required unknown subjects name the unresolved decision; absent runtime, storage, commands, and code paths are not invented to fill headings. Conditional sections are omitted when irrelevant.
+9. **Entrypoint Navigation**: `CLAUDE.md` contains only a title and instruction to follow its relative `AGENTS.md` link. `AGENTS.md` uses Scope, Task Routing, Approval Boundaries, and Completion; its actual local destinations exist. If architecture is documented, its Repository Map describes the project's current empty or undecided state rather than a proposed directory tree presented as implemented.
 
 ### Failing Baseline Behaviors (RED)
 - Inventing a PostgreSQL schema with physical tables (`business`, `staff`, `appointment`, UUIDs, foreign keys, GiST constraints) when storage is undecided.
@@ -105,6 +107,8 @@ Create disposable directory `/tmp/n2-ui-fixture`:
 6. **Implementation Mapping**: Feature spec indicates `Implementation: Not yet available` and `Tests: Not yet available`.
 7. **English Deliverables**: All documentation files are written in English.
 8. **No Invented UI Defaults or Thresholds**: Unselected UI tokens, responsive breakpoints/thresholds (e.g. 768px, 1024px), and component prop defaults (e.g. `ButtonProps` defaults) remain explicitly marked as proposals or unknowns, not mandatory standards. Approving feature scope or responsive shape does not authorize invented UI implementation defaults.
+9. **UI Format Without Generic Defaults**: `docs/standards/ui.md` uses Component Ownership, Styling and Tokens, Interaction States, Accessibility, and Examples in order. Contents distinguish the agreed Button contract from undecided accessibility or styling decisions; only evidenced examples are supplied.
+10. **Single Content Owner**: UI contract details live in UI standards, business behavior in the draft booking spec, and any project structure in architecture's Repository Map. Root entrypoints route to those documents rather than repeating their details.
 
 ### Failing Baseline Behaviors (RED)
 - Telling the developer to "Implement the agreed Button and tokens" or producing code implementation during knowledge initialization.
