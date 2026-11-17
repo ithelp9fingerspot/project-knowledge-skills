@@ -1,6 +1,7 @@
 ---
 name: structuring-project-documentation
-description: Use when scaffolding documentation formats without implementation discovery, or reorganizing selected existing docs into a standard structure without validating them against code
+description: Structure project documentation without implementation discovery.
+disable-model-invocation: true
 ---
 
 # Structuring Project Documentation

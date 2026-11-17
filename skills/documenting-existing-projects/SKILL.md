@@ -1,6 +1,7 @@
 ---
 name: documenting-existing-projects
-description: Use when documenting an existing codebase, reverse-engineering architecture and specs, or establishing repository knowledge from existing code
+description: Document an existing codebase using implementation evidence.
+disable-model-invocation: true
 ---
 
 # Documenting Existing Projects

@@ -155,7 +155,7 @@ Create disposable directory `/tmp/w2-addon-fixture`:
 
 ### Intent
 Verify that the agent correctly distinguishes between two distinct scenarios:
-1. **Case A (Missing Spec / New Feature)**: When asked to implement a new feature (e.g. gift addon) where no specification exists, the agent does NOT jump straight to writing code or assume requirements from copyable code patterns. It creates a durable new specification at `docs/specs/<domain>/<feature>.md` with `## Metadata` (Domain, auto Last Updated, Related Specs), surfaces open questions, and obtains developer decisions on ambiguous behavior BEFORE implementation.
+1. **Case A (Missing Spec / New Feature)**: When asked to implement a new feature (e.g. gift addon) where no specification exists, the agent does NOT jump straight to writing code or assume requirements from copyable code patterns. It creates a durable new specification at `docs/specs/<domain>/<feature>.md` with `## Metadata` (Domain, auto Last Updated, Related Specs), surfaces open questions, and obtains developer decisions before implementing behavior that depends on them. Independent settled work may proceed.
 2. **Case B (Behavior-Preserving Refactor)**: When asked to refactor existing code without changing behavior (e.g. extract helper function, optimize performance, rename internal variables), the agent updates code and tests without altering business rules in `docs/specs/`, without inventing new business semantics, and without modifying spec files or updating spec dates when spec content is unchanged.
 
 ### Target Fixture Setup
@@ -184,7 +184,7 @@ Create disposable directory `/tmp/w3-gift-refactor-fixture`:
 
 ### Observable Pass Criteria
 1. **Durable Spec Created for New Feature**: For Prompt A, agent creates `docs/specs/billing/gift-addon.md` adhering to the standard feature spec layout (with `## Metadata`, `BR-GIFT-001`, and `## Open Questions` for ambiguous behavior), omitting Status, Owner, and Last Reviewed fields.
-2. **Decision Gate Before Coding**: Agent does NOT implement code for the new feature until the developer resolves ambiguous behavior and authorizes implementation.
+2. **Decision Gate Before Coding**: Agent does NOT implement behavior or tests that depend on unresolved decisions. Independently specified work may proceed after its spec is drafted; no separate administrative authorization is required for supplied requirements.
 3. **Standard Placement**: The spec is written directly into `docs/specs/<domain>/<feature>.md`, never into a temporary `proposals/` or `changes/` folder.
 4. **Refactor Boundary Respected**: For Prompt B, agent refactors code and verifies tests without modifying business rules in `docs/specs/` and without unnecessarily advancing spec dates.
 
@@ -225,6 +225,6 @@ Observable pass criteria:
 | **Neutral Conflict Presentation** | High | 100% | Presents spec rule vs code with line references; no unilateral blessing in W1 |
 | **Spec-First Mutation Order** | High | 100% | Spec updated and saved before code/test edits in W2 |
 | **Strict Scope Discipline** | High | 100% | Only authorized rule updated; usage entitlement and pricing untouched in W2 |
-| **Durable Spec for New Features** | High | 100% | Creates standard spec in `docs/specs/` and resolves ambiguous behavior before coding in W3 |
+| **Durable Spec for New Features** | High | 100% | Creates standard spec in `docs/specs/` and resolves ambiguous behavior before implementing dependent work in W3 |
 | **Refactor Semantics Preservation** | High | 100% | No business rule alteration or unnecessary spec date bump during refactor in W3 |
 | **No Proposal/Change Archives** | Medium | 100% | No `changes/` or proposal folders created across all scenarios |

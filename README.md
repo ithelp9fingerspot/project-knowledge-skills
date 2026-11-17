@@ -9,6 +9,8 @@ All skill instructions and generated documentation are written in English.
 ---
 
 ## Skills and Their Triggers
+`working-with-project-specs` is intended for automatic invocation in repositories governed by project specs or standards. Invoke the other four skills explicitly by name. Their `disable-model-invocation` frontmatter hides them from the omp model-facing catalog, but does not prevent access through `skill://` or `/skill:<name>`. Other runtimes may behave differently. Omp's Agent Plugin validator rejects this frontmatter field; for that packaging, use the runtime's `skills.manualSkills` setting instead of adding the field to plugin skills.
+
 
 | Skill Directory | Trigger / Lifecycle Phase | Key Responsibility |
 |---|---|---|
@@ -49,7 +51,7 @@ The result is an explicitly incomplete framework, not approved feature behavior 
 
 ### 1. Documenting an Existing Project
 ```text
-"Inspect this repository and generate complete project knowledge documentation following
+"Use documenting-existing-projects to inspect this repository and generate complete project knowledge documentation following
 our project knowledge standard. Do not treat old docs as authority until I specify,
 and ask me how to handle existing documentation before writing files."
 ```
@@ -57,7 +59,7 @@ and ask me how to handle existing documentation before writing files."
 
 ### 2. Initializing a Greenfield Project
 ```text
-"Initialize project knowledge for a new appointment booking platform. Stack is Go with
+"Use initializing-project-knowledge to initialize project knowledge for a new appointment booking platform. Stack is Go with
 PostgreSQL. We have not finalized the physical database schema or payment provider.
 Prepare the initial knowledge base and booking spec."
 ```
@@ -72,7 +74,7 @@ addons directly. Update the code and tests right away."
 
 ### 4. Auditing Project Knowledge
 ```text
-"Audit all project knowledge documentation in this repository. Verify structural links,
+"Use auditing-project-knowledge to audit all project knowledge documentation in this repository. Verify structural links,
 spec-to-code alignment, and standards compliance. Report any issues found."
 ```
 *Expected Agent Behavior*: Performs read-only scans; checks link integrity, implementation mappings, and schema parity; writes zero files to the target repository; reports findings grouped by severity and category with clear workflow routing.

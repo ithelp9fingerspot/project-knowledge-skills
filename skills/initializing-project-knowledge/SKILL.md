@@ -1,6 +1,7 @@
 ---
 name: initializing-project-knowledge
-description: Use when starting a new project, establishing initial repository knowledge before implementation, defining initial feature specifications from requirements, or setting up AGENTS.md and docs layout for an unimplemented codebase
+description: Establish project knowledge for a new, unimplemented project.
+disable-model-invocation: true
 ---
 
 # Initializing Project Knowledge

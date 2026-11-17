@@ -1,6 +1,7 @@
 ---
 name: auditing-project-knowledge
-description: Use when auditing repository documentation against code, evaluating knowledge base completeness, validating links, or checking spec-code-schema alignment without mutating target files
+description: Audit repository documentation against code, schemas, and standards.
+disable-model-invocation: true
 ---
 
 # Auditing Project Knowledge
