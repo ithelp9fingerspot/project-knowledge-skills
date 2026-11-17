@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "skillevaluator": {
+      "source": "NVIDIA/SkillEvaluator",
+      "commit": "8fe9723db9921a848083b238b3e42b1ed8536ab5",
+      "sourceType": "github",
+      "skillPath": "skills/skillevaluator/SKILL.md",
+      "computedHash": "d009edaf65bbae9ad16b8c2564c1ebc0607882efe73404d5b0fd55b4fdec756d"
+    }
+  }
+}
